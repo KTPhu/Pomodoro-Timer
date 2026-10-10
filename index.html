@@ -1,0 +1,210 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fff5e8">
+<title>Pomodoro Garden</title>
+<style>
+:root{--paper:#fff8ed;--peach:#ffead8;--peach2:#f8ddc6;--red:#BAE6FD;--red-dark:#EAB308;--ink:#252522;--muted:#756d63;--line:#ddbe9f;--green:#64864b;--card:#fffaf2}
+*{box-sizing:border-box}body{margin:0;background:#f6eee4;color:var(--ink);font:16px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select{font:inherit}button{cursor:pointer}.app{max-width:1450px;min-height:100vh;margin:0 auto;background:var(--paper);display:grid;grid-template-columns:230px minmax(0,1fr);box-shadow:0 10px 50px #4b32120d}
+.sidebar{padding:34px 20px;background:linear-gradient(180deg,#fff0df,#ffead6);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:100vh}.brand{font:700 32px/.98 Georgia,serif;letter-spacing:-1.4px;margin:18px 8px 38px}.sprout{font-size:38px;display:block;margin-bottom:12px}.nav{display:grid;gap:8px}.nav button{border:0;background:transparent;text-align:left;padding:13px 14px;border-radius:15px;color:#625b53;font-weight:650}.nav button.active,.primary{background:var(--red);color:white}.nav button:hover{background:#f7d6c5}.nav button.active:hover,.primary:hover{background:var(--red-dark)}.sidebar-note{margin-top:auto;padding:22px 10px 0;color:#7b6b5b;font:italic 17px Georgia,serif}
+main{padding:30px 34px 34px;min-width:0}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}.eyebrow{font-size:12px;letter-spacing:1.5px;font-weight:750;color:var(--muted);text-transform:uppercase}.topbar h1{font:700 clamp(27px,3vw,39px)/1.1 Georgia,serif;margin:6px 0 0;letter-spacing:-1px}.profile{border:1px solid var(--line);background:#fff9f0;border-radius:999px;padding:9px 13px;white-space:nowrap}
+.grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.85fr);gap:20px}.left,.right{display:grid;align-content:start;gap:16px}.card{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:20px;box-shadow:0 4px 12px #72471b06}.timer-card{background:radial-gradient(ellipse at 50% 48%,#fffaf0 0,#fff1e2 68%,#ffead7 100%);padding:22px 24px 20px;text-align:center}.mode-tabs{display:flex;border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px;background:#fff9f0}.mode-tabs button{flex:1;border:0;background:transparent;padding:11px 8px;border-radius:999px;color:#5b5148;font-weight:650}.mode-tabs button.active{background:var(--red);color:white}.timer-ring{width:min(270px,72vw);aspect-ratio:1;margin:24px auto 16px;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--red) var(--progress,0%),#efd6c0 0);padding:9px}.timer-ring:before{content:"";position:absolute;inset:9px;border-radius:50%;background:#fff8ed}.timer-inner{position:relative;z-index:1}.timer-inner .leaf{font-size:25px}.time{font:700 clamp(48px,6vw,68px)/1 Georgia,serif;letter-spacing:-3px;margin:8px 0}.timer-label{font-size:12px;letter-spacing:2px;font-weight:800;color:#60584f}.session-count{font-size:13px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-top:8px}.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.primary,.secondary{border:1px solid var(--line);border-radius:13px;padding:12px 18px;font-weight:750}.primary{min-width:210px;border-color:transparent}.secondary{background:#fff8ed;color:#443c35;min-width:105px}.secondary:hover{background:#ffefdf}.timer-help{font-size:12px;color:var(--muted);margin-top:13px}
+h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}.section-title{display:flex;align-items:center;gap:9px}.section-title span{font-size:21px}.task-row{display:flex;align-items:center;gap:12px;padding:9px 0}.task-row input[type=checkbox]{width:20px;height:20px;accent-color:var(--green)}.task-text{flex:1;min-width:0}.task-text.done{text-decoration:line-through;color:#9b9288}.pill{font-size:11px;background:#ffded5;color:#a52f28;padding:5px 9px;border-radius:99px;white-space:nowrap}.task-form{display:flex;gap:8px;margin-top:12px}.task-form input{min-width:0;flex:1;border:1px solid var(--line);background:#fffdf8;border-radius:12px;padding:12px}.task-form button{border:0;border-radius:12px;background:var(--red);color:white;padding:0 18px;font-weight:700}.small-muted{color:var(--muted);font-size:13px}
+.progress-top{display:flex;align-items:baseline;gap:9px}.progress-top strong{font:700 26px Georgia,serif}.tomatoes{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 18px}.tomato{font-size:23px;opacity:.22}.tomato.filled{opacity:1}.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;border-top:1px solid var(--line);padding-top:18px}.day{text-align:center;font-size:11px;color:var(--muted)}.bar{height:52px;display:flex;align-items:end;margin-bottom:7px}.bar i{display:block;width:100%;background:#f1c2a6;border-radius:5px 5px 0 0;min-height:6px}.day:nth-child(2) i{background:#e99a87}.day.today i{background:var(--red)}
+.ritual{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:0;background:#fff3e3;border-radius:14px;padding:11px;margin:8px 0;color:var(--ink)}.ritual:hover{background:#ffe8d0}.ritual .emoji{width:39px;height:39px;border-radius:50%;display:grid;place-items:center;background:#f5dfbd;font-size:22px}.ritual strong{display:block;font-size:13px}.ritual small{display:block;color:var(--muted);font-size:12px}.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line);margin-top:12px}.switch{appearance:none;width:44px;height:25px;background:#d4c5b7;border-radius:99px;position:relative;cursor:pointer;transition:.2s}.switch:checked{background:var(--red)}.switch:before{content:"";position:absolute;left:3px;top:3px;width:19px;height:19px;border-radius:50%;background:white;transition:.2s}.switch:checked:before{left:22px}
+.receipt{display:grid;grid-template-columns:65px minmax(100px,1fr) repeat(3,auto);align-items:center;gap:14px;background:#fff0df;border-style:dashed}.receipt-icon{font-size:39px}.receipt h2{font-size:21px;margin-bottom:4px}.stat{border-left:1px solid var(--line);padding-left:13px}.stat small{display:block;font-size:9px;font-weight:800;letter-spacing:.7px;color:var(--muted)}.stat strong{font:700 19px Georgia,serif;white-space:nowrap}.hidden{display:none!important}.time{cursor:text;border-radius:10px}.time:focus{background:#fff;outline:3px solid #efd6c0;padding:8px}.focus-overlay{display:none;position:fixed;inset:0;z-index:1000;background:#fff8ed;overflow:auto;padding:20px}.focus-overlay.open{display:block}.overlay-top{max-width:900px;margin:0 auto 18px;display:flex;justify-content:space-between;align-items:center}.overlay-content{max-width:900px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:18px}.ice-art{width:min(340px,100%);aspect-ratio:1;object-fit:contain;display:block;margin:0 auto;transition:clip-path .35s}.timer-visuals{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:center;gap:12px;width:100%;max-width:680px;margin:24px auto 16px}.timer-visuals .ice-art{grid-column:1;grid-row:1;width:min(340px,100%)}.timer-visuals .timer-ring{grid-column:2;grid-row:1;width:min(270px,100%);margin:0}.timer-visuals .time{font-size:clamp(30px,6vw,68px)}@media(max-width:650px){.overlay-content{grid-template-columns:1fr}}.view-title{font:700 32px Georgia,serif;margin:0 0 8px}.empty{padding:18px 0;color:var(--muted)}
+@media(max-width:1000px){.app{grid-template-columns:190px minmax(0,1fr)}main{padding:24px 20px}.grid{grid-template-columns:1fr}.right{grid-template-columns:repeat(2,minmax(0,1fr))}.right .card:last-child{grid-column:1/-1}.sidebar{padding:26px 14px}.brand{font-size:27px}}
+@media(max-width:650px){.app{display:block}.sidebar{min-height:0;padding:14px 16px;border-right:0;border-bottom:1px solid var(--line)}.brand{font-size:23px;margin:0 0 12px;display:flex;align-items:center;gap:8px}.sprout{font-size:25px;margin:0}.nav{display:flex;overflow-x:auto;gap:5px}.nav button{white-space:nowrap;padding:10px 12px;font-size:13px}.sidebar-note{display:none}main{padding:20px 14px}.topbar{align-items:flex-start}.profile{font-size:12px}.right{grid-template-columns:1fr}.right .card:last-child{grid-column:auto}.timer-card{padding:16px 12px}.mode-tabs button{font-size:12px;padding:10px 4px}.receipt{grid-template-columns:42px 1fr 1fr;gap:10px}.receipt-icon{font-size:30px}.receipt .stat{padding-left:8px}.receipt .stat:nth-last-child(1){display:none}.stat strong{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="sprout">🌱</span><span>Pomodoro<br>Garden</span></div>
+    <nav class="nav" aria-label="Main navigation">
+      <button class="active" data-view="focus">◴ &nbsp; Focus</button>
+      <button data-view="tasks">☑ &nbsp; To-do List</button>
+      <button data-view="history">◷ &nbsp; History</button>
+      <button data-view="calendar">▦ &nbsp; Calendar</button>
+      <button data-view="settings">⚙ &nbsp; Settings</button>
+    </nav>
+    <div class="sidebar-note">Small steps<br>grow big things. 🌿</div>
+  </aside>
+  <main>
+    <header class="topbar">
+      <div><div class="eyebrow" id="todayLabel"></div><h1 id="pageTitle">Make room for focus. 🌱</h1></div>
+      <div class="profile">🪴 &nbsp; Garden guest</div>
+    </header>
+    <section id="focusView">
+      <div class="grid">
+        <div class="left">
+          <section class="card timer-card">
+            <div class="mode-tabs" role="group" aria-label="Timer mode">
+              <button class="active" data-mode="focus"> Focus</button><button data-mode="short">☕ Short break</button><button data-mode="long">🌳 Long break</button>
+            </div>
+            <div class="timer-visuals" id="timerVisuals"><div class="timer-ring" id="timerRing"><div class="timer-inner"><div class="leaf">🌱</div><div class="time" id="timeDisplay" role="timer" aria-live="off" title="Click to edit the timer">25:00</div><div class="timer-label" id="timerLabel">FOCUS SESSION</div><div class="session-count" id="sessionCount">SESSION 1 OF 4</div></div></div></div>
+            <div class="controls"><button class="primary" id="startPause">▶ &nbsp; Start focus</button><button class="secondary" id="resetBtn">↻ Reset</button><button class="secondary" id="skipBtn">⏭ Skip</button></div>
+            <div class="timer-help">Tip: finish one small task, then let yourself rest.</div>
+          </section>
+          <section class="card">
+            <h2 class="section-title"><span>🌱</span> Up next</h2>
+            <!-- <div id="nextTask" class="empty">Add a task below to choose what to focus on.</div> -->
+            <form class="task-form" id="taskForm"><input id="taskInput" maxlength="120" placeholder="+  Add a new task…" aria-label="New task" required><button>Add</button></form>
+          </section>
+          <section class="card receipt">
+            <div class="receipt-icon">🧾</div><div><h2>Session receipt</h2><div class="small-muted">Your focus makes a difference.</div></div>
+            <div class="stat"><small>FOCUSED</small><strong id="focusedStat">0 min</strong></div><div class="stat"><small>COMPLETED</small><strong id="completedStat">0 cycles</strong></div><div class="stat"><small>STREAK</small><strong id="streakStat">0 days</strong></div>
+          </section>
+        </div>
+        <div class="right">
+          <section class="card">
+            <h2 class="section-title"><span>🌱</span> Today’s garden</h2>
+            <div class="progress-top"><strong id="todayCount">0 / 8</strong><span>pomodoros completed</span></div><div class="tomatoes" id="tomatoes"></div>
+            <div class="week" id="weekBars"></div>
+          </section>
+          <section class="card">
+            <h2 class="section-title"><span>☕</span> Break ritual</h2><p class="small-muted" style="margin-top:-9px">A little pause goes a long way.</p>
+            <button class="ritual" data-ritual="Drink water"><span class="emoji">💧</span><span><strong>Drink water</strong><small>Rehydrate and refresh</small></span></button>
+            <button class="ritual" data-ritual="Step outside"><span class="emoji">🌳</span><span><strong>Step outside</strong><small>Get some fresh air</small></span></button>
+            <button class="ritual" data-ritual="Stretch for 2 min"><span class="emoji">🧘</span><span><strong>Stretch for 2 min</strong><small>Move your body</small></span></button>
+            <button class="ritual" data-ritual="Take a 10-minute walk"><span class="emoji">🚶</span><span><strong>Take a 10-minute walk</strong><small>Let your mind reset</small></span></button>
+            <div class="toggle-row"><label for="alarmToggle">🔔 &nbsp; Loud alarm</label><input class="switch" type="checkbox" id="alarmToggle" checked></div>
+            <div class="toggle-row"><label for="phoneToggle">📵 &nbsp; Phone-away reminder</label><input class="switch" type="checkbox" id="phoneToggle" checked></div>
+            <button class="secondary" id="calendarBtn" style="width:100%;margin-top:12px">▦ &nbsp; Download calendar event (.ics)</button>
+          </section>
+        </div>
+      </div>
+    </section>
+    <div class="focus-overlay" id="focusOverlay" role="dialog" aria-modal="true"><div class="overlay-top"><strong>Pomodoro Garden · focus mode</strong><button class="secondary" id="closeOverlay">✕ Exit focus view</button></div><div class="overlay-content"><div id="overlayTimer"></div><section class="card"><h2>☑ Your to-do list</h2><div id="overlayTasks"></div><p class="small-muted">One thing at a time. Everything else can wait.</p></section></div></div><section id="otherView" class="card hidden"><h2 class="view-title" id="otherTitle"></h2><div id="otherContent"></div></section>
+  </main>
+</div>
+<script>
+(() => {
+  const $ = s => document.querySelector(s);
+  const $$ = s => [...document.querySelectorAll(s)];
+  const STORE = "pomodoro-garden-v1";
+  const defaults = {tasks:[],sessions:[],mode:"focus",durations:{focus:25,short:5,long:15},alarm:true,phoneReminder:true};
+  let data;
+  try { data = {...defaults,...JSON.parse(localStorage.getItem(STORE) || "{}")}; } catch { data = {...defaults}; }
+  data.tasks ||= []; data.sessions ||= []; data.durations = {...defaults.durations,...data.durations};
+  let remaining = data.durations[data.mode] * 60, running = false, endAt = null, ticker = null, audioCtx = null;
+  let lastTickSecond = null;
+  const modes = {focus:{label:"FOCUS SESSION",button:"▶  Start focus"},short:{label:"SHORT BREAK",button:"▶  Start break"},long:{label:"LONG BREAK",button:"▶  Start long break"}};
+  const todayKey = () => new Date().toLocaleDateString("en-CA");
+  const save = () => { localStorage.setItem(STORE,JSON.stringify(data)); renderStats(); };
+  const daySessions = (key=todayKey()) => data.sessions.filter(s=>s.day===key && s.mode==="focus");
+  const completedToday = () => daySessions().length;
+  const totalFocusMinutes = () => data.sessions.filter(s=>s.mode==="focus").reduce((sum,s)=>sum+s.minutes,0);
+  function renderTimer(){
+    const mm = Math.floor(remaining/60), ss = remaining%60;
+    $("#timeDisplay").textContent = `${String(mm).padStart(2,"0")}:${String(ss).padStart(2,"0")}`;
+    $("#timerLabel").textContent = modes[data.mode].label;
+    $("#startPause").textContent = running ? "Ⅱ  Pause" : modes[data.mode].button;
+    $("#sessionCount").textContent = `SESSION ${(completedToday()%4)+1} OF 4`;
+    $$(".mode-tabs button").forEach(b=>b.classList.toggle("active",b.dataset.mode===data.mode));
+    const total = data.durations[data.mode]*60;
+    const pct = total ? (1-remaining/total)*100 : 0;
+    $("#timerRing").style.setProperty("--progress", `${pct}%`);
+    document.title = `${$("#timeDisplay").textContent} · Pomodoro Garden`;
+  }
+  function setMode(mode){ pauseTimer(); data.mode=mode; remaining=data.durations[mode]*60; save(); renderTimer(); }
+  function pauseTimer(){running=false; if(ticker)clearInterval(ticker); ticker=null; endAt=null; renderTimer();}
+  function startTimer(){
+    if(running){pauseTimer();return;}
+    if(data.phoneReminder && data.mode==="focus" && !sessionStorage.getItem("phoneReminderShown")){
+      sessionStorage.setItem("phoneReminderShown","1");
+      if(!confirm("🌱 Before you start, put your phone away and silence distractions. Ready to focus?")) return;
+    }
+    running=true; endAt=Date.now()+remaining*1000; renderTimer();
+    ticker=setInterval(()=>{remaining=Math.max(0,Math.ceil((endAt-Date.now())/1000));renderTimer();if(remaining<=0)finishTimer();},250);
+  }
+  function finishTimer(){
+    const finishedMode=data.mode; pauseTimer();
+    if(finishedMode==="focus"){
+      data.sessions.push({day:todayKey(),mode:"focus",minutes:data.durations.focus,finishedAt:new Date().toISOString()});
+      save(); playAlarm(); alert("🍅 Focus session complete! Great work. Time for a little break.");
+      const next = completedToday()%4===0 ? "long" : "short"; setMode(next);
+    } else {playAlarm();alert("🌱 Break complete. Ready to grow another focus session?");setMode("focus");}
+  }
+  function playAlarm(){
+    if(!data.alarm)return;
+    try {
+      audioCtx ||= new (window.AudioContext||window.webkitAudioContext)();
+      if(audioCtx.state==="suspended")audioCtx.resume();
+      [0,0.28,0.56].forEach(delay=>{const osc=audioCtx.createOscillator(),gain=audioCtx.createGain();osc.type="sine";osc.frequency.value=880;gain.gain.setValueAtTime(.0001,audioCtx.currentTime+delay);gain.gain.exponentialRampToValueAtTime(.22,audioCtx.currentTime+delay+.02);gain.gain.exponentialRampToValueAtTime(.0001,audioCtx.currentTime+delay+.22);osc.connect(gain);gain.connect(audioCtx.destination);osc.start(audioCtx.currentTime+delay);osc.stop(audioCtx.currentTime+delay+.24);});
+    } catch(e) { console.warn("Audio alarm unavailable",e); }
+  }
+  function renderTasks(){
+    const target=$("#nextTask");
+    if(!data.tasks.length){target.className="empty";target.textContent="Add a task below to choose what to focus on.";return;}
+    target.className="";
+    target.innerHTML=data.tasks.map((t,i)=>`<div class="task-row"><input type="checkbox" data-check="${i}" ${t.done?"checked":""} aria-label="Complete ${escapeHtml(t.text)}"><span class="task-text ${t.done?"done":""}">${escapeHtml(t.text)}</span>${i===data.tasks.findIndex(x=>!x.done)?'<span class="pill">UP NEXT</span>':""}<button data-delete="${i}" class="secondary" style="min-width:0;padding:5px 9px" aria-label="Delete task">×</button></div>`).join("");
+    $$("[data-check]").forEach(el=>el.addEventListener("change",()=>{data.tasks[+el.dataset.check].done=el.checked;save();renderTasks();}));
+    $$("[data-delete]").forEach(el=>el.addEventListener("click",()=>{data.tasks.splice(+el.dataset.delete,1);save();renderTasks();}));
+  }
+  function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+  function renderStats(){
+    const n=completedToday(); $("#todayCount").textContent=`${n} / 8`;
+    $("#tomatoes").innerHTML=Array.from({length:Math.max(8,n)},(_,i)=>`<span class="tomato ${i<n?"filled":""}">🍅</span>`).join("");
+    $("#focusedStat").textContent=`${totalFocusMinutes()} min`;$("#completedStat").textContent=`${data.sessions.filter(s=>s.mode==="focus").length} cycles`;
+    const days=new Set(data.sessions.filter(s=>s.mode==="focus").map(s=>s.day));let streak=0;const d=new Date();
+    while(days.has(d.toLocaleDateString("en-CA"))){streak++;d.setDate(d.getDate()-1);}
+    $("#streakStat").textContent=`${streak} days`;
+    const week=$("#weekBars"), names=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"], now=new Date();
+    week.innerHTML=Array.from({length:7},(_,i)=>{const day=new Date(now);day.setDate(now.getDate()-((now.getDay()+6)%7)+i);const key=day.toLocaleDateString("en-CA");const count=daySessions(key).length;return {day,key,count,name:names[day.getDay()]};}).map(x=>`<div class="day ${x.key===todayKey()?"today":""}"><div class="bar"><i style="height:${Math.max(6,Math.min(100,x.count/8*100))}%"></i></div>${x.name}</div>`).join("");
+    renderTasks();
+  }
+  function showView(view){
+    $$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
+    $("#focusView").classList.toggle("hidden",view!=="focus");$("#otherView").classList.toggle("hidden",view==="focus");
+    const titles={focus:"Make room for focus. 🌱",tasks:"Tend to your task list.",history:"Every session counts.",calendar:"Make time for focus.",settings:"Make it your own."};
+    $("#pageTitle").textContent=titles[view]||titles.focus;
+    if(view==="focus")return;
+    $("#otherTitle").textContent=titles[view];
+    const content=$("#otherContent");
+    if(view==="tasks"){
+      content.innerHTML='<p class="small-muted">Your tasks are stored in this browser.</p><div id="allTasks"></div>';
+      $("#allTasks").innerHTML=data.tasks.length?data.tasks.map((t,i)=>`<div class="task-row"><input type="checkbox" data-allcheck="${i}" ${t.done?"checked":""}><span class="task-text ${t.done?"done":""}">${escapeHtml(t.text)}</span><button class="secondary" data-alldel="${i}">Delete</button></div>`).join(""):'<p class="empty">No tasks yet. Add one on the Focus screen.</p>';
+      $$("[data-allcheck]").forEach(e=>e.addEventListener("change",()=>{data.tasks[+e.dataset.allcheck].done=e.checked;save();showView("tasks");}));
+      $$("[data-alldel]").forEach(e=>e.addEventListener("click",()=>{data.tasks.splice(+e.dataset.alldel,1);save();showView("tasks");}));
+    } else if(view==="history"){
+      content.innerHTML=`<p>You have completed <strong>${data.sessions.length}</strong> focus sessions, totalling <strong>${totalFocusMinutes()} minutes</strong>.</p>`+(data.sessions.length?'<div>'+data.sessions.slice().reverse().map(s=>`<div class="task-row">🍅 <span class="task-text">Focus session</span><span class="small-muted">${escapeHtml(s.day)} · ${s.minutes} min</span></div>`).join("")+'</div>':'<p class="empty">Your completed sessions will appear here.</p>')+'<button id="exportBtn" class="secondary">Export session history (CSV)</button>';
+      $("#exportBtn").addEventListener("click",()=>{const rows=[["day","mode","minutes","finishedAt"],...data.sessions.map(s=>[s.day,s.mode,s.minutes,s.finishedAt])];download("pomodoro-history.csv",rows.map(r=>r.map(v=>`"${String(v??"").replaceAll('"','""')}"`).join(",")).join("\n"),"text/csv");});
+    } else if(view==="calendar"){
+      content.innerHTML='<p>There is no calendar account connected in this starter version. You can download a local calendar event and import it into Google Calendar, Apple Calendar, or Outlook.</p><button id="icsBtn" class="primary">Download a focus block (.ics)</button><p class="small-muted">A true two-way sync requires a calendar provider API and sign-in flow.</p>';
+      $("#icsBtn").addEventListener("click",downloadCalendar);
+    } else if(view==="settings"){
+      content.innerHTML=`<p>Choose your session lengths. Changes apply to the next timer session.</p><div class="task-row"><label class="task-text" for="focusMins">Focus minutes</label><input id="focusMins" type="number" min="1" max="120" value="${data.durations.focus}" style="width:90px;padding:8px;border:1px solid var(--line);border-radius:9px"></div><div class="task-row"><label class="task-text" for="shortMins">Short break minutes</label><input id="shortMins" type="number" min="1" max="60" value="${data.durations.short}" style="width:90px;padding:8px;border:1px solid var(--line);border-radius:9px"></div><div class="task-row"><label class="task-text" for="longMins">Long break minutes</label><input id="longMins" type="number" min="1" max="90" value="${data.durations.long}" style="width:90px;padding:8px;border:1px solid var(--line);border-radius:9px"></div><button id="saveSettings" class="primary">Save timer settings</button><hr style="border:0;border-top:1px solid var(--line);margin:22px 0"><button id="clearData" class="secondary">Clear all local data</button><p class="small-muted">This removes tasks and history saved in this browser only.</p>`;
+      $("#saveSettings").addEventListener("click",()=>{for(const [id,key,max] of [["focusMins","focus",120],["shortMins","short",60],["longMins","long",90]]){const n=Number($("#"+id).value);if(!Number.isInteger(n)||n<1||n>max){alert(`Enter a whole number from 1 to ${max}.`);return;}data.durations[key]=n;}setMode(data.mode);alert("Settings saved.");});
+      $("#clearData").addEventListener("click",()=>{if(confirm("Delete all tasks and session history from this browser?")){data={...defaults,tasks:[],sessions:[],durations:{...defaults.durations}};localStorage.removeItem(STORE);pauseTimer();setMode("focus");renderStats();showView("settings");}});
+    }
+  }
+  function download(name,content,type){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);}
+  function downloadCalendar(){
+    const start=new Date(Date.now()+60000),end=new Date(start.getTime()+data.durations.focus*60000);
+    const fmt=d=>d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
+    const ics=`BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Pomodoro Garden//EN\nBEGIN:VEVENT\nUID:${Date.now()}@pomodoro-garden.local\nDTSTAMP:${fmt(new Date())}\nDTSTART:${fmt(start)}\nDTEND:${fmt(end)}\nSUMMARY:Pomodoro Garden focus session\nDESCRIPTION:One focused session. Remember to take a break afterwards.\nEND:VEVENT\nEND:VCALENDAR`;
+    download("pomodoro-focus.ics",ics,"text/calendar");
+  }
+  $("#startPause").addEventListener("click",startTimer);
+  $("#resetBtn").addEventListener("click",()=>{pauseTimer();remaining=data.durations[data.mode]*60;renderTimer();});
+  $("#skipBtn").addEventListener("click",()=>{pauseTimer();setMode(data.mode==="focus"?(completedToday()%4===3?"long":"short"):"focus");});
+  $$(".mode-tabs button").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
+  $("#taskForm").addEventListener("submit",e=>{e.preventDefault();const text=$("#taskInput").value.trim();if(!text)return;data.tasks.push({text,done:false,createdAt:new Date().toISOString()});$("#taskInput").value="";save();renderTasks();});
+  $$(".nav button").forEach(b=>b.addEventListener("click",()=>showView(b.dataset.view)));
+  $("#alarmToggle").checked=data.alarm;$("#alarmToggle").addEventListener("change",e=>{data.alarm=e.target.checked;save();});
+  $("#phoneToggle").checked=data.phoneReminder;$("#phoneToggle").addEventListener("change",e=>{data.phoneReminder=e.target.checked;save();});
+  $$(".ritual").forEach(b=>b.addEventListener("click",()=>alert(`🌿 Break ritual: ${b.dataset.ritual}\n\nTake a moment away from your screen. You deserve the pause.`)));
+  $("#calendarBtn").addEventListener("click",downloadCalendar);
+  $("#todayLabel").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric"}).toUpperCase();
+  $("#timeDisplay").addEventListener("click",()=>{if(running)return;const d=$("#timeDisplay"),i=document.createElement("input");i.value=d.textContent;i.style.cssText="font:inherit;font-size:clamp(40px,5vw,60px);width:190px;text-align:center";d.replaceWith(i);i.focus();i.select();const done=()=>{let v=i.value.trim(),n;if(/^\d{1,3}:\d{1,2}$/.test(v)){const a=v.split(":").map(Number);n=a[0]*60+a[1]}else n=/^\d{1,3}$/.test(v)?Number(v)*60:remaining;n=Math.max(1,Math.min(7200,n));data.durations[data.mode]=Math.ceil(n/60);remaining=n;save();i.replaceWith(d);renderTimer()};i.addEventListener("keydown",e=>{if(e.key==="Enter")done();if(e.key==="Escape"){i.replaceWith(d);renderTimer()}});i.addEventListener("blur",done,{once:true})});
+  const overlay=$("#focusOverlay");$("#closeOverlay").addEventListener("click",()=>overlay.classList.remove("open"));const startOriginal=startTimer;startTimer=function(){startOriginal();if(running){$("#overlayTimer").append(document.querySelector(".timer-card"));$("#overlayTasks").innerHTML=$("#nextTask").innerHTML;overlay.classList.add("open")}};
+  const renderOriginal=renderTimer;renderTimer=function(){renderOriginal();if(overlay.classList.contains("open")){const card=document.querySelector(".timer-card");if(card&&!overlay.contains(card))$("#overlayTimer").append(card);$("#overlayTasks").innerHTML=$("#nextTask").innerHTML}let art=$("#iceArt");if(!art){art=document.createElement("img");art.id="iceArt";art.className="ice-art";art.alt="Ice cube melting as time passes";art.src="ice-cube.png";$("#timerVisuals").prepend(art)}const pct=Math.max(0,Math.min(1,1-remaining/(data.durations[data.mode]*60||1)));art.style.clipPath=`inset(0 0 ${pct*100}% 0)`};
+  renderTimer();renderStats();
+})();
+</script>
+</body>
+</html>
