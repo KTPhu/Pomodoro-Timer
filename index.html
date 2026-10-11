@@ -1,35 +1,102 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <link rel="stylesheet" href="/style.css" />
+  <script src="script.js" defer></script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#fff5e8">
-<title>Pomodoro Garden</title>
+<title>melt</title>
+
+
+
+
+
+
+
+
+
 <style>
 :root{--paper:#fff8ed;--peach:#ffead8;--peach2:#f8ddc6;--red:#BAE6FD;--red-dark:#EAB308;--ink:#252522;--muted:#756d63;--line:#ddbe9f;--green:#64864b;--card:#fffaf2}
 *{box-sizing:border-box}body{margin:0;background:#f6eee4;color:var(--ink);font:16px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 button,input,select{font:inherit}button{cursor:pointer}.app{max-width:1450px;min-height:100vh;margin:0 auto;background:var(--paper);display:grid;grid-template-columns:230px minmax(0,1fr);box-shadow:0 10px 50px #4b32120d}
 .sidebar{padding:34px 20px;background:linear-gradient(180deg,#fff0df,#ffead6);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:100vh}.brand{font:700 32px/.98 Georgia,serif;letter-spacing:-1.4px;margin:18px 8px 38px}.sprout{font-size:38px;display:block;margin-bottom:12px}.nav{display:grid;gap:8px}.nav button{border:0;background:transparent;text-align:left;padding:13px 14px;border-radius:15px;color:#625b53;font-weight:650}.nav button.active,.primary{background:var(--red);color:white}.nav button:hover{background:#f7d6c5}.nav button.active:hover,.primary:hover{background:var(--red-dark)}.sidebar-note{margin-top:auto;padding:22px 10px 0;color:#7b6b5b;font:italic 17px Georgia,serif}
-main{padding:30px 34px 34px;min-width:0}.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}.eyebrow{font-size:12px;letter-spacing:1.5px;font-weight:750;color:var(--muted);text-transform:uppercase}.topbar h1{font:700 clamp(27px,3vw,39px)/1.1 Georgia,serif;margin:6px 0 0;letter-spacing:-1px}.profile{border:1px solid var(--line);background:#fff9f0;border-radius:999px;padding:9px 13px;white-space:nowrap}
+main{padding:30px 34px 34px;min-width:0}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:22px}.eyebrow{font-size:12px;letter-spacing:1.5px;font-weight:750;color:var(--muted);text-transform:uppercase}.topbar h1{font:700 clamp(27px,3vw,39px)/1.1 Georgia,serif;margin:6px 0 0;letter-spacing:-1px}.profile{border:1px solid var(--line);background:#fff9f0;border-radius:999px;padding:9px 13px;white-space:nowrap}
 .grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(280px,.85fr);gap:20px}.left,.right{display:grid;align-content:start;gap:16px}.card{border:1px solid var(--line);border-radius:18px;background:var(--card);padding:20px;box-shadow:0 4px 12px #72471b06}.timer-card{background:radial-gradient(ellipse at 50% 48%,#fffaf0 0,#fff1e2 68%,#ffead7 100%);padding:22px 24px 20px;text-align:center}.mode-tabs{display:flex;border:1px solid var(--line);border-radius:999px;padding:4px;gap:4px;background:#fff9f0}.mode-tabs button{flex:1;border:0;background:transparent;padding:11px 8px;border-radius:999px;color:#5b5148;font-weight:650}.mode-tabs button.active{background:var(--red);color:white}.timer-ring{width:min(270px,72vw);aspect-ratio:1;margin:24px auto 16px;border-radius:50%;display:grid;place-items:center;position:relative;background:conic-gradient(var(--red) var(--progress,0%),#efd6c0 0);padding:9px}.timer-ring:before{content:"";position:absolute;inset:9px;border-radius:50%;background:#fff8ed}.timer-inner{position:relative;z-index:1}.timer-inner .leaf{font-size:25px}.time{font:700 clamp(48px,6vw,68px)/1 Georgia,serif;letter-spacing:-3px;margin:8px 0}.timer-label{font-size:12px;letter-spacing:2px;font-weight:800;color:#60584f}.session-count{font-size:13px;font-weight:700;letter-spacing:1px;color:var(--muted);margin-top:8px}.controls{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}.primary,.secondary{border:1px solid var(--line);border-radius:13px;padding:12px 18px;font-weight:750}.primary{min-width:210px;border-color:transparent}.secondary{background:#fff8ed;color:#443c35;min-width:105px}.secondary:hover{background:#ffefdf}.timer-help{font-size:12px;color:var(--muted);margin-top:13px}
-h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}.section-title{display:flex;align-items:center;gap:9px}.section-title span{font-size:21px}.task-row{display:flex;align-items:center;gap:12px;padding:9px 0}.task-row input[type=checkbox]{width:20px;height:20px;accent-color:var(--green)}.task-text{flex:1;min-width:0}.task-text.done{text-decoration:line-through;color:#9b9288}.pill{font-size:11px;background:#ffded5;color:#a52f28;padding:5px 9px;border-radius:99px;white-space:nowrap}.task-form{display:flex;gap:8px;margin-top:12px}.task-form input{min-width:0;flex:1;border:1px solid var(--line);background:#fffdf8;border-radius:12px;padding:12px}.task-form button{border:0;border-radius:12px;background:var(--red);color:white;padding:0 18px;font-weight:700}.small-muted{color:var(--muted);font-size:13px}
-.progress-top{display:flex;align-items:baseline;gap:9px}.progress-top strong{font:700 26px Georgia,serif}.tomatoes{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 18px}.tomato{font-size:23px;opacity:.22}.tomato.filled{opacity:1}.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;border-top:1px solid var(--line);padding-top:18px}.day{text-align:center;font-size:11px;color:var(--muted)}.bar{height:52px;display:flex;align-items:end;margin-bottom:7px}.bar i{display:block;width:100%;background:#f1c2a6;border-radius:5px 5px 0 0;min-height:6px}.day:nth-child(2) i{background:#e99a87}.day.today i{background:var(--red)}
-.ritual{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:0;background:#fff3e3;border-radius:14px;padding:11px;margin:8px 0;color:var(--ink)}.ritual:hover{background:#ffe8d0}.ritual .emoji{width:39px;height:39px;border-radius:50%;display:grid;place-items:center;background:#f5dfbd;font-size:22px}.ritual strong{display:block;font-size:13px}.ritual small{display:block;color:var(--muted);font-size:12px}.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line);margin-top:12px}.switch{appearance:none;width:44px;height:25px;background:#d4c5b7;border-radius:99px;position:relative;cursor:pointer;transition:.2s}.switch:checked{background:var(--red)}.switch:before{content:"";position:absolute;left:3px;top:3px;width:19px;height:19px;border-radius:50%;background:white;transition:.2s}.switch:checked:before{left:22px}
-.receipt{display:grid;grid-template-columns:65px minmax(100px,1fr) repeat(3,auto);align-items:center;gap:14px;background:#fff0df;border-style:dashed}.receipt-icon{font-size:39px}.receipt h2{font-size:21px;margin-bottom:4px}.stat{border-left:1px solid var(--line);padding-left:13px}.stat small{display:block;font-size:9px;font-weight:800;letter-spacing:.7px;color:var(--muted)}.stat strong{font:700 19px Georgia,serif;white-space:nowrap}.hidden{display:none!important}.time{cursor:text;border-radius:10px}.time:focus{background:#fff;outline:3px solid #efd6c0;padding:8px}.focus-overlay{display:none;position:fixed;inset:0;z-index:1000;background:#fff8ed;overflow:auto;padding:20px}.focus-overlay.open{display:block}.overlay-top{max-width:900px;margin:0 auto 18px;display:flex;justify-content:space-between;align-items:center}.overlay-content{max-width:900px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:18px}.ice-art{width:min(340px,100%);aspect-ratio:1;object-fit:contain;display:block;margin:0 auto;transition:clip-path .35s}.timer-visuals{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:center;gap:12px;width:100%;max-width:680px;margin:24px auto 16px}.timer-visuals .ice-art{grid-column:1;grid-row:1;width:min(340px,100%)}.timer-visuals .timer-ring{grid-column:2;grid-row:1;width:min(270px,100%);margin:0}.timer-visuals .time{font-size:clamp(30px,6vw,68px)}@media(max-width:650px){.overlay-content{grid-template-columns:1fr}}.view-title{font:700 32px Georgia,serif;margin:0 0 8px}.empty{padding:18px 0;color:var(--muted)}
+h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
+.section-title{display:flex;align-items:center;gap:9px}
+.section-title span{font-size:21px}.task-row{display:flex;align-items:center;gap:12px;padding:9px 0}.task-row input[type=checkbox]{width:20px;height:20px;accent-color:var(--green)}.task-text{flex:1;min-width:0}.task-text.done{text-decoration:line-through;color:#9b9288}.pill{font-size:11px;background:#ffded5;color:#a52f28;padding:5px 9px;border-radius:99px;white-space:nowrap}.task-form{display:flex;gap:8px;margin-top:12px}.task-form input{min-width:0;flex:1;border:1px solid var(--line);background:#fffdf8;border-radius:12px;padding:12px}.task-form button{border:0;border-radius:12px;background:var(--red);color:white;padding:0 18px;font-weight:700}.small-muted{color:var(--muted);font-size:13px}
+.progress-top{display:flex;align-items:baseline;gap:9px}
+.progress-top strong{font:700 26px Georgia,serif}
+.tomatoes{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 18px}.tomato{font-size:23px;opacity:.22}.tomato.filled{opacity:1}.week{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;align-items:end;border-top:1px solid var(--line);padding-top:18px}.day{text-align:center;font-size:11px;color:var(--muted)}.bar{height:52px;display:flex;align-items:end;margin-bottom:7px}.bar i{display:block;width:100%;background:#f1c2a6;border-radius:5px 5px 0 0;min-height:6px}.day:nth-child(2) i{background:#e99a87}.day.today i{background:var(--red)}
+.ritual{display:flex;align-items:center;gap:11px;width:100%;text-align:left;border:0;background:#fff3e3;border-radius:14px;padding:11px;margin:8px 0;color:var(--ink)}.ritual:hover{background:#ffe8d0}.ritual 
+.emoji{width:39px;height:39px;border-radius:50%;display:grid;place-items:center;background:#f5dfbd;font-size:22px}
+.ritual strong{display:block;font-size:13px}.ritual small{display:block;color:var(--muted);font-size:12px}.toggle-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1px solid var(--line);margin-top:12px}.switch{appearance:none;width:44px;height:25px;background:#d4c5b7;border-radius:99px;position:relative;cursor:pointer;transition:.2s}.switch:checked{background:var(--red)}.switch:before{content:"";position:absolute;left:3px;top:3px;width:19px;height:19px;border-radius:50%;background:white;transition:.2s}.switch:checked:before{left:22px}
+.receipt{display:grid;grid-template-columns:65px minmax(100px,1fr) repeat(3,auto);align-items:center;gap:14px;background:#fff0df;border-style:dashed}.receipt-icon{font-size:39px}.receipt h2{font-size:21px;margin-bottom:4px}.stat{border-left:1px solid var(--line);padding-left:13px}.stat small{display:block;font-size:9px;font-weight:800;letter-spacing:.7px;color:var(--muted)}.stat strong{font:700 19px Georgia,serif;white-space:nowrap}.hidden{display:none!important}.time{cursor:text;border-radius:10px}.time:focus{background:#fff;outline:3px solid #efd6c0;padding:8px}.focus-overlay{display:none;position:fixed;inset:0;z-index:1000;background:#fff8ed;overflow:auto;padding:20px}.focus-overlay.open{display:block}.overlay-top{max-width:900px;margin:0 auto 18px;display:flex;justify-content:space-between;align-items:center}.overlay-content{max-width:900px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.ice-art{width:min(340px,100%);aspect-ratio:1;object-fit:contain;display:block;margin:0 auto;transition:clip-path .35s}.timer-visuals{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);align-items:center;gap:12px;width:100%;max-width:680px;margin:24px auto 16px}.timer-visuals .ice-art{grid-column:1;grid-row:1;width:min(340px,100%)}.timer-visuals .timer-ring{grid-column:2;grid-row:1;width:min(270px,100%);margin:0}.timer-visuals .time{font-size:clamp(30px,6vw,68px)}@media(max-width:650px){.overlay-content{grid-template-columns:1fr}}.view-title{font:700 32px Georgia,serif;margin:0 0 8px}.empty{padding:18px 0;color:var(--muted)}
+.timer-visuals .ice-art-stack{grid-column:1;grid-row:1;position:relative;width:min(340px,100%);aspect-ratio:1;margin:0 auto}
+.timer-visuals .ice-art-stack .ice-art{position:absolute;inset:0;width:100%;height:100%;margin:0;transition:clip-path .35s linear,opacity .85s ease}
+.timer-visuals .ice-art-stack .melted-ice-art{opacity:0;clip-path:none}
+.timer-visuals .ice-art-stack .melted-ice-art.visible{opacity:1}
 @media(max-width:1000px){.app{grid-template-columns:190px minmax(0,1fr)}main{padding:24px 20px}.grid{grid-template-columns:1fr}.right{grid-template-columns:repeat(2,minmax(0,1fr))}.right .card:last-child{grid-column:1/-1}.sidebar{padding:26px 14px}.brand{font-size:27px}}
 @media(max-width:650px){.app{display:block}.sidebar{min-height:0;padding:14px 16px;border-right:0;border-bottom:1px solid var(--line)}.brand{font-size:23px;margin:0 0 12px;display:flex;align-items:center;gap:8px}.sprout{font-size:25px;margin:0}.nav{display:flex;overflow-x:auto;gap:5px}.nav button{white-space:nowrap;padding:10px 12px;font-size:13px}.sidebar-note{display:none}main{padding:20px 14px}.topbar{align-items:flex-start}.profile{font-size:12px}.right{grid-template-columns:1fr}.right .card:last-child{grid-column:auto}.timer-card{padding:16px 12px}.mode-tabs button{font-size:12px;padding:10px 4px}.receipt{grid-template-columns:42px 1fr 1fr;gap:10px}.receipt-icon{font-size:30px}.receipt .stat{padding-left:8px}.receipt .stat:nth-last-child(1){display:none}.stat strong{font-size:16px}}
+
 </style>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 </head>
 <body>
 <div class="app">
   <aside class="sidebar">
-    <div class="brand"><span class="sprout">🌱</span><span>Pomodoro<br>Garden</span></div>
+    <div class="brand"><span class="sprout">🌱 <!-- MAKE A DIFFIDNET ICON     -->
+
+
+    </span><span>Pomodoro<br>Garden</span></div>
     <nav class="nav" aria-label="Main navigation">
-      <button class="active" data-view="focus">◴ &nbsp; Focus</button>
-      <button data-view="tasks">☑ &nbsp; To-do List</button>
-      <button data-view="history">◷ &nbsp; History</button>
-      <button data-view="calendar">▦ &nbsp; Calendar</button>
-      <button data-view="settings">⚙ &nbsp; Settings</button>
+   
+   <!--topbar to link to other pages-->
+      <a href="index.html">
+  <button class="active" data-view="Timer">
+    ◴ &nbsp; Timer</button>
+  </a>
+
+       <!-- <a href="to-do.html"> -->
+  <button class="active" data-view="tasks">
+    ◴ &nbsp; To-Do List</button></a>
+      <!-- <button data-view="history">◷ &nbsp; History</button> -->
+      
+<!-- <a href="calendar.html"> -->
+  <button class="active" data-view="Calendar">
+    ◴ &nbsp; Calendar</button>
+  <!-- </a> -->
+
+       <!-- <a href="settings.html"> -->
+  <button class="active" data-view="settings">
+    ◴ &nbsp; Settings</button>
+  <!-- </a> -->
+
     </nav>
     <div class="sidebar-note">Small steps<br>grow big things. 🌿</div>
   </aside>
@@ -45,13 +112,13 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}.section
             <div class="mode-tabs" role="group" aria-label="Timer mode">
               <button class="active" data-mode="focus"> Focus</button><button data-mode="short">☕ Short break</button><button data-mode="long">🌳 Long break</button>
             </div>
-            <div class="timer-visuals" id="timerVisuals"><div class="timer-ring" id="timerRing"><div class="timer-inner"><div class="leaf">🌱</div><div class="time" id="timeDisplay" role="timer" aria-live="off" title="Click to edit the timer">25:00</div><div class="timer-label" id="timerLabel">FOCUS SESSION</div><div class="session-count" id="sessionCount">SESSION 1 OF 4</div></div></div></div>
+            <div class="timer-visuals" id="timerVisuals"><div class="ice-art-stack"><img id="iceArt" class="ice-art" src="./ice-cube.png" alt="Ice cube melting as time passes"><img id="meltedIceArt" class="ice-art melted-ice-art" src="./melted-ice.png" alt="" aria-hidden="true"></div><div class="timer-ring" id="timerRing"><div class="timer-inner"><div class="leaf">🌱</div><div class="time" id="timeDisplay" role="timer" aria-live="off" title="Click to edit the timer">25:00</div><div class="timer-label" id="timerLabel">FOCUS SESSION</div><div class="session-count" id="sessionCount">SESSION 1 OF 4</div></div></div></div>
             <div class="controls"><button class="primary" id="startPause">▶ &nbsp; Start focus</button><button class="secondary" id="resetBtn">↻ Reset</button><button class="secondary" id="skipBtn">⏭ Skip</button></div>
             <div class="timer-help">Tip: finish one small task, then let yourself rest.</div>
           </section>
           <section class="card">
             <h2 class="section-title"><span>🌱</span> Up next</h2>
-            <!-- <div id="nextTask" class="empty">Add a task below to choose what to focus on.</div> -->
+            <div id="nextTask" class="empty">Add a task below to choose what to focus on.</div>
             <form class="task-form" id="taskForm"><input id="taskInput" maxlength="120" placeholder="+  Add a new task…" aria-label="New task" required><button>Add</button></form>
           </section>
           <section class="card receipt">
@@ -67,13 +134,13 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}.section
           </section>
           <section class="card">
             <h2 class="section-title"><span>☕</span> Break ritual</h2><p class="small-muted" style="margin-top:-9px">A little pause goes a long way.</p>
-            <button class="ritual" data-ritual="Drink water"><span class="emoji">💧</span><span><strong>Drink water</strong><small>Rehydrate and refresh</small></span></button>
-            <button class="ritual" data-ritual="Step outside"><span class="emoji">🌳</span><span><strong>Step outside</strong><small>Get some fresh air</small></span></button>
-            <button class="ritual" data-ritual="Stretch for 2 min"><span class="emoji">🧘</span><span><strong>Stretch for 2 min</strong><small>Move your body</small></span></button>
-            <button class="ritual" data-ritual="Take a 10-minute walk"><span class="emoji">🚶</span><span><strong>Take a 10-minute walk</strong><small>Let your mind reset</small></span></button>
-            <div class="toggle-row"><label for="alarmToggle">🔔 &nbsp; Loud alarm</label><input class="switch" type="checkbox" id="alarmToggle" checked></div>
-            <div class="toggle-row"><label for="phoneToggle">📵 &nbsp; Phone-away reminder</label><input class="switch" type="checkbox" id="phoneToggle" checked></div>
-            <button class="secondary" id="calendarBtn" style="width:100%;margin-top:12px">▦ &nbsp; Download calendar event (.ics)</button>
+            <p class="ritual" data-ritual="Drink water"><span class="emoji">💧</span><span><strong>Drink water</strong><small>Rehydrate and refresh</small></span></p>
+            <p class="ritual" data-ritual="Step outside"><span class="emoji">🌳</span><span><strong>Step outside</strong><small>Get some fresh air</small></span></p>
+            <p class="ritual" data-ritual="Stretch for 2 min"><span class="emoji">🧘</span><span><strong>Stretch for 2 min</strong><small>Move your body</small></span></p>
+            <p class="ritual" data-ritual="Take a 10-minute walk"><span class="emoji">🚶</span><span><strong>Take a 10-minute walk</strong><small>Let your mind reset</small></span></p>
+            <div class="toggle-row"><label for="alarmToggle"> &nbsp; Loud alarm</label><input class="switch" type="checkbox" id="alarmToggle" checked></div>
+            <div class="toggle-row"><label for="phoneToggle"> &nbsp; Phone-away reminder</label><input class="switch" type="checkbox" id="phoneToggle" checked></div>
+            <!-- <button class="secondary" id="calendarBtn" style="width:100%;margin-top:12px">▦ &nbsp; Download calendar event (.ics)</button> -->
           </section>
         </div>
       </div>
@@ -81,8 +148,66 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}.section
     <div class="focus-overlay" id="focusOverlay" role="dialog" aria-modal="true"><div class="overlay-top"><strong>Pomodoro Garden · focus mode</strong><button class="secondary" id="closeOverlay">✕ Exit focus view</button></div><div class="overlay-content"><div id="overlayTimer"></div><section class="card"><h2>☑ Your to-do list</h2><div id="overlayTasks"></div><p class="small-muted">One thing at a time. Everything else can wait.</p></section></div></div><section id="otherView" class="card hidden"><h2 class="view-title" id="otherTitle"></h2><div id="otherContent"></div></section>
   </main>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 <script>
-(() => {
+  (() => {
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
   const STORE = "pomodoro-garden-v1";
@@ -90,7 +215,7 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}.section
   let data;
   try { data = {...defaults,...JSON.parse(localStorage.getItem(STORE) || "{}")}; } catch { data = {...defaults}; }
   data.tasks ||= []; data.sessions ||= []; data.durations = {...defaults.durations,...data.durations};
-  let remaining = data.durations[data.mode] * 60, running = false, endAt = null, ticker = null, audioCtx = null;
+  let remaining = data.durations[data.mode] * 60, running = false, endAt = null, ticker = null, audioCtx = null, focusMelted = false;
   let lastTickSecond = null;
   const modes = {focus:{label:"FOCUS SESSION",button:"▶  Start focus"},short:{label:"SHORT BREAK",button:"▶  Start break"},long:{label:"LONG BREAK",button:"▶  Start long break"}};
   const todayKey = () => new Date().toLocaleDateString("en-CA");
@@ -110,7 +235,7 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}.section
     $("#timerRing").style.setProperty("--progress", `${pct}%`);
     document.title = `${$("#timeDisplay").textContent} · Pomodoro Garden`;
   }
-  function setMode(mode){ pauseTimer(); data.mode=mode; remaining=data.durations[mode]*60; save(); renderTimer(); }
+  function setMode(mode){ pauseTimer(); data.mode=mode; if(mode==="focus")focusMelted=false; remaining=data.durations[mode]*60; save(); renderTimer(); }
   function pauseTimer(){running=false; if(ticker)clearInterval(ticker); ticker=null; endAt=null; renderTimer();}
   function startTimer(){
     if(running){pauseTimer();return;}
@@ -122,11 +247,13 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}.section
     ticker=setInterval(()=>{remaining=Math.max(0,Math.ceil((endAt-Date.now())/1000));renderTimer();if(remaining<=0)finishTimer();},250);
   }
   function finishTimer(){
+    if(data.mode==="focus")focusMelted=true;
     const finishedMode=data.mode; pauseTimer();
     if(finishedMode==="focus"){
       data.sessions.push({day:todayKey(),mode:"focus",minutes:data.durations.focus,finishedAt:new Date().toISOString()});
-      save(); playAlarm(); alert("🍅 Focus session complete! Great work. Time for a little break.");
+      save(); playAlarm();
       const next = completedToday()%4===0 ? "long" : "short"; setMode(next);
+      setTimeout(()=>alert("🍅 Focus session complete! Great work. Time for a little break."),900);
     } else {playAlarm();alert("🌱 Break complete. Ready to grow another focus session?");setMode("focus");}
   }
   function playAlarm(){
@@ -198,13 +325,13 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}.section
   $("#alarmToggle").checked=data.alarm;$("#alarmToggle").addEventListener("change",e=>{data.alarm=e.target.checked;save();});
   $("#phoneToggle").checked=data.phoneReminder;$("#phoneToggle").addEventListener("change",e=>{data.phoneReminder=e.target.checked;save();});
   $$(".ritual").forEach(b=>b.addEventListener("click",()=>alert(`🌿 Break ritual: ${b.dataset.ritual}\n\nTake a moment away from your screen. You deserve the pause.`)));
-  $("#calendarBtn").addEventListener("click",downloadCalendar);
+  const calendarBtn=$("#calendarBtn");if(calendarBtn)calendarBtn.addEventListener("click",downloadCalendar);
   $("#todayLabel").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric"}).toUpperCase();
   $("#timeDisplay").addEventListener("click",()=>{if(running)return;const d=$("#timeDisplay"),i=document.createElement("input");i.value=d.textContent;i.style.cssText="font:inherit;font-size:clamp(40px,5vw,60px);width:190px;text-align:center";d.replaceWith(i);i.focus();i.select();const done=()=>{let v=i.value.trim(),n;if(/^\d{1,3}:\d{1,2}$/.test(v)){const a=v.split(":").map(Number);n=a[0]*60+a[1]}else n=/^\d{1,3}$/.test(v)?Number(v)*60:remaining;n=Math.max(1,Math.min(7200,n));data.durations[data.mode]=Math.ceil(n/60);remaining=n;save();i.replaceWith(d);renderTimer()};i.addEventListener("keydown",e=>{if(e.key==="Enter")done();if(e.key==="Escape"){i.replaceWith(d);renderTimer()}});i.addEventListener("blur",done,{once:true})});
   const overlay=$("#focusOverlay");$("#closeOverlay").addEventListener("click",()=>overlay.classList.remove("open"));const startOriginal=startTimer;startTimer=function(){startOriginal();if(running){$("#overlayTimer").append(document.querySelector(".timer-card"));$("#overlayTasks").innerHTML=$("#nextTask").innerHTML;overlay.classList.add("open")}};
-  const renderOriginal=renderTimer;renderTimer=function(){renderOriginal();if(overlay.classList.contains("open")){const card=document.querySelector(".timer-card");if(card&&!overlay.contains(card))$("#overlayTimer").append(card);$("#overlayTasks").innerHTML=$("#nextTask").innerHTML}let art=$("#iceArt");if(!art){art=document.createElement("img");art.id="iceArt";art.className="ice-art";art.alt="Ice cube melting as time passes";art.src="ice-cube.png";$("#timerVisuals").prepend(art)}const pct=Math.max(0,Math.min(1,1-remaining/(data.durations[data.mode]*60||1)));art.style.clipPath=`inset(0 0 ${pct*100}% 0)`};
+  const renderOriginal=renderTimer;renderTimer=function(){renderOriginal();if(overlay.classList.contains("open")){const card=document.querySelector(".timer-card");if(card&&!overlay.contains(card))$("#overlayTimer").append(card);$("#overlayTasks").innerHTML=$("#nextTask").innerHTML}const pct=data.mode==="focus"?Math.max(0,Math.min(1,1-remaining/(data.durations.focus*60||1))):0;$("#iceArt").style.clipPath=`inset(${(focusMelted?100:pct*100)}% 0 0 0)`;$("#meltedIceArt").classList.toggle("visible",focusMelted)};
   renderTimer();renderStats();
 })();
-</script>
+</script> 
 </body>
 </html>
