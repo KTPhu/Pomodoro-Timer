@@ -7,6 +7,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#fff5e8">
 <title>melt</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Dosis:wght@200..800&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Serif:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 
 
 
@@ -16,7 +22,7 @@
 
 
 
-<style>
+<!--<style>
 :root{--paper:#fff8ed;--peach:#ffead8;--peach2:#f8ddc6;--red:#BAE6FD;--red-dark:#EAB308;--ink:#252522;--muted:#756d63;--line:#ddbe9f;--green:#64864b;--card:#fffaf2}
 *{box-sizing:border-box}body{margin:0;background:#f6eee4;color:var(--ink);font:16px/1.45 Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 button,input,select{font:inherit}button{cursor:pointer}.app{max-width:1450px;min-height:100vh;margin:0 auto;background:var(--paper);display:grid;grid-template-columns:230px minmax(0,1fr);box-shadow:0 10px 50px #4b32120d}
@@ -42,7 +48,7 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
 @media(max-width:1000px){.app{grid-template-columns:190px minmax(0,1fr)}main{padding:24px 20px}.grid{grid-template-columns:1fr}.right{grid-template-columns:repeat(2,minmax(0,1fr))}.right .card:last-child{grid-column:1/-1}.sidebar{padding:26px 14px}.brand{font-size:27px}}
 @media(max-width:650px){.app{display:block}.sidebar{min-height:0;padding:14px 16px;border-right:0;border-bottom:1px solid var(--line)}.brand{font-size:23px;margin:0 0 12px;display:flex;align-items:center;gap:8px}.sprout{font-size:25px;margin:0}.nav{display:flex;overflow-x:auto;gap:5px}.nav button{white-space:nowrap;padding:10px 12px;font-size:13px}.sidebar-note{display:none}main{padding:20px 14px}.topbar{align-items:flex-start}.profile{font-size:12px}.right{grid-template-columns:1fr}.right .card:last-child{grid-column:auto}.timer-card{padding:16px 12px}.mode-tabs button{font-size:12px;padding:10px 4px}.receipt{grid-template-columns:42px 1fr 1fr;gap:10px}.receipt-icon{font-size:30px}.receipt .stat{padding-left:8px}.receipt .stat:nth-last-child(1){display:none}.stat strong{font-size:16px}}
 
-</style>
+</style>-->
 
 
 
@@ -70,32 +76,26 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
 <body>
 <div class="app">
   <aside class="sidebar">
-    <div class="brand"><span class="sprout">🌱 <!-- MAKE A DIFFIDNET ICON     -->
+    <div class="brand"><span class="sprout">🧊 <!-- MAKE A DIFFIDNET ICON     -->
 
 
-    </span><span>Pomodoro<br>Garden</span></div>
+    </span><span>MELT</span></div>
     <nav class="nav" aria-label="Main navigation">
    
    <!--topbar to link to other pages-->
-      <a href="index.html">
-  <button class="active" data-view="Timer">
-    ◴ &nbsp; Timer</button>
-  </a>
-
-       <!-- <a href="to-do.html"> -->
-  <button class="active" data-view="tasks">
-    ◴ &nbsp; To-Do List</button></a>
+      <button class="active" type="button" data-view="focus">
+        ◴ &nbsp; Timer
+      </button>
+      <button type="button" data-view="tasks">
+        ◴ &nbsp; To-Do List
+      </button>
       <!-- <button data-view="history">◷ &nbsp; History</button> -->
-      
-<!-- <a href="calendar.html"> -->
-  <button class="active" data-view="Calendar">
-    ◴ &nbsp; Calendar</button>
-  <!-- </a> -->
-
-       <!-- <a href="settings.html"> -->
-  <button class="active" data-view="settings">
-    ◴ &nbsp; Settings</button>
-  <!-- </a> -->
+      <button type="button" data-view="calendar">
+        ◴ &nbsp; Calendar
+      </button>
+      <button type="button" data-view="settings">
+        ◴ &nbsp; Settings
+      </button>
 
     </nav>
     <div class="sidebar-note">Small steps<br>grow big things. 🌿</div>
@@ -103,7 +103,7 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
   <main>
     <header class="topbar">
       <div><div class="eyebrow" id="todayLabel"></div><h1 id="pageTitle">Focus so smooth, time just melts</h1></div>
-      <div class="profile">🪴 &nbsp; Garden guest</div>
+      <div class="profile">⛲ &nbsp; Sign In</div>
     </header>
     <section id="focusView">
       <div class="grid">
@@ -128,17 +128,18 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
         </div>
         <div class="right">
           <section class="card">
-            <h2 class="section-title"><span>🌱</span> Today’s garden</h2>
-            <div class="progress-top"><strong id="todayCount">0 / 8</strong><span>pomodoros completed</span></div><div class="tomatoes" id="tomatoes"></div>
+            <h2 class="section-title">Today’s Melts</h2>
+            <div class="progress-top"><strong id="todayCount">0 / 8</strong><span>sessions completed</span></div><div class="tomatoes" id="tomatoes"></div>
             <div class="week" id="weekBars"></div>
           </section>
           <section class="card">
-            <h2 class="section-title"><span>☕</span> Break ritual</h2><p class="small-muted" style="margin-top:-9px">A little pause goes a long way.</p>
-            <p class="ritual" data-ritual="Drink water"><span class="emoji">💧</span><span><strong>Drink water</strong><small>Rehydrate and refresh</small></span></p>
-            <p class="ritual" data-ritual="Step outside"><span class="emoji">🌳</span><span><strong>Step outside</strong><small>Get some fresh air</small></span></p>
-            <p class="ritual" data-ritual="Stretch for 2 min"><span class="emoji">🧘</span><span><strong>Stretch for 2 min</strong><small>Move your body</small></span></p>
-            <p class="ritual" data-ritual="Take a 10-minute walk"><span class="emoji">🚶</span><span><strong>Take a 10-minute walk</strong><small>Let your mind reset</small></span></p>
-            <div class="toggle-row"><label for="alarmToggle"> &nbsp; Loud alarm</label><input class="switch" type="checkbox" id="alarmToggle" checked></div>
+            <h2 class="section-title"><span>Break Ritual</h2><p class="small-muted" style="margin-top:-9px">A little pause goes a long way.</p>
+            <div id="breakRituals"></div>
+            <form class="ritual-form" id="ritualForm">
+              <input id="ritualInput" maxlength="80" placeholder="Add your own ritual" aria-label="New break ritual" required>
+              <button type="submit" aria-label="Add Your Own">Add</button>
+            </form>
+            <!-- <div class="toggle-row"><label for="alarmToggle"> &nbsp; Loud alarm</label><input class="switch" type="checkbox" id="alarmToggle" checked></div> -->
             <div class="toggle-row"><label for="phoneToggle"> &nbsp; Phone-away reminder</label><input class="switch" type="checkbox" id="phoneToggle" checked></div>
             <!-- <button class="secondary" id="calendarBtn" style="width:100%;margin-top:12px">▦ &nbsp; Download calendar event (.ics)</button> -->
           </section>
@@ -206,7 +207,7 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
 
 
 
-<script>
+<!--<script>
   (() => {
   const $ = s => document.querySelector(s);
   const $$ = s => [...document.querySelectorAll(s)];
@@ -332,6 +333,6 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
   const renderOriginal=renderTimer;renderTimer=function(){renderOriginal();if(overlay.classList.contains("open")){const card=document.querySelector(".timer-card");if(card&&!overlay.contains(card))$("#overlayTimer").append(card);$("#overlayTasks").innerHTML=$("#nextTask").innerHTML}const pct=data.mode==="focus"?Math.max(0,Math.min(1,1-remaining/(data.durations.focus*60||1))):0;$("#iceArt").style.clipPath=`inset(${(focusMelted?100:pct*100)}% 0 0 0)`;$("#meltedIceArt").classList.toggle("visible",focusMelted)};
   renderTimer();renderStats();
 })();
-</script> 
+</script> -->
 </body>
 </html>
