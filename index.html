@@ -98,7 +98,7 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
       </button>
 
     </nav>
-    <div class="sidebar-note">Small steps<br>grow big things. 🌿</div>
+    <div class="sidebar-note">Beneath the melting ice,<br>the river flows.</div>
   </aside>
   <main>
     <header class="topbar">
@@ -110,19 +110,24 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
         <div class="left">
           <section class="card timer-card">
             <div class="mode-tabs" role="group" aria-label="Timer mode">
-              <button class="active" data-mode="focus"> Focus</button><button data-mode="short">☕ Short break</button><button data-mode="long">🌳 Long break</button>
+              <button class="active" data-mode="focus"> Focus</button><button data-mode="short">Short Break</button><button data-mode="long">Long break</button>
             </div>
             <div class="timer-visuals" id="timerVisuals"><div class="ice-art-stack"><img id="iceArt" class="ice-art" src="./ice-cube.png" alt="Ice cube melting as time passes"><img id="meltedIceArt" class="ice-art melted-ice-art" src="./melted-ice.png" alt="" aria-hidden="true"></div><div class="timer-ring" id="timerRing"><div class="timer-inner"><div class="leaf">🌱</div><div class="time" id="timeDisplay" role="timer" aria-live="off" title="Click to edit the timer">25:00</div><div class="timer-label" id="timerLabel">FOCUS SESSION</div><div class="session-count" id="sessionCount">SESSION 1 OF 4</div></div></div></div>
             <div class="controls"><button class="primary" id="startPause">▶ &nbsp; Start focus</button><button class="secondary" id="resetBtn">↻ Reset</button><button class="secondary" id="skipBtn">⏭ Skip</button></div>
+            <div class="phone-reminder" id="phoneReminder" role="region" aria-labelledby="phoneReminderTitle" aria-describedby="phoneReminderDescription" hidden>
+              <strong id="phoneReminderTitle">Ready to focus?</strong>
+              <p id="phoneReminderDescription">Put your phone away and silence distractions before starting your session.</p>
+              <button class="primary" id="phoneReminderConfirm" type="button">Putting my phone away</button>
+            </div>
             <div class="timer-help">Tip: finish one small task, then let yourself rest.</div>
           </section>
           <section class="card">
-            <h2 class="section-title"><span>🌱</span> Up next</h2>
+            <!-- <h2 class="section-title"><span>🌱</span> Up next</h2> -->
             <div id="nextTask" class="empty">Add a task below to choose what to focus on.</div>
             <form class="task-form" id="taskForm"><input id="taskInput" maxlength="120" placeholder="+  Add a new task…" aria-label="New task" required><button>Add</button></form>
           </section>
           <section class="card receipt">
-            <div class="receipt-icon">🧾</div><div><h2>Session receipt</h2><div class="small-muted">Your focus makes a difference.</div></div>
+            <img class="receipt-icon" src="./receipt.png" alt="Hand-drawn paper receipt"><div><h2>Session receipt</h2><div class="small-muted">Your focus makes a difference.</div></div>
             <div class="stat"><small>FOCUSED</small><strong id="focusedStat">0 min</strong></div><div class="stat"><small>COMPLETED</small><strong id="completedStat">0 cycles</strong></div><div class="stat"><small>STREAK</small><strong id="streakStat">0 days</strong></div>
           </section>
         </div>
@@ -146,7 +151,7 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
         </div>
       </div>
     </section>
-    <div class="focus-overlay" id="focusOverlay" role="dialog" aria-modal="true"><div class="overlay-top"><strong>Pomodoro Garden · focus mode</strong><button class="secondary" id="closeOverlay">✕ Exit focus view</button></div><div class="overlay-content"><div id="overlayTimer"></div><section class="card"><h2>☑ Your to-do list</h2><div id="overlayTasks"></div><p class="small-muted">One thing at a time. Everything else can wait.</p></section></div></div><section id="otherView" class="card hidden"><h2 class="view-title" id="otherTitle"></h2><div id="otherContent"></div></section>
+    <div class="focus-overlay" id="focusOverlay" role="dialog" aria-modal="true"><div class="overlay-top"><strong>MELT · focus mode</strong><button class="secondary" id="closeOverlay">✕ Exit focus view</button></div><div class="overlay-content"><div id="overlayTimer"></div><section class="card"><h2>☑ Your to-do list</h2><div id="overlayTasks"></div><p class="small-muted">One thing at a time. Everything else can wait.</p></section></div></div><section id="otherView" class="card hidden"><h2 class="view-title" id="otherTitle"></h2><div id="otherContent"></div></section>
   </main>
 </div>
 

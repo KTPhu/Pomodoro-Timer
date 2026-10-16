@@ -31,8 +31,10 @@
   function startTimer(){
     if(running){pauseTimer();return;}
     if(data.phoneReminder && data.mode==="focus" && !sessionStorage.getItem("phoneReminderShown")){
-      sessionStorage.setItem("phoneReminderShown","1");
-      if(!confirm("🌱 Before you start, put your phone away and silence distractions. Ready to focus?")) return;
+      const reminder=$("#phoneReminder");
+      reminder.hidden=false;
+      $("#phoneReminderConfirm").focus();
+      return;
     }
     running=true; endAt=Date.now()+remaining*1000; renderTimer();
     ticker=setInterval(()=>{remaining=Math.max(0,Math.ceil((endAt-Date.now())/1000));renderTimer();if(remaining<=0)finishTimer();},250);
@@ -44,8 +46,7 @@
       data.sessions.push({day:todayKey(),mode:"focus",minutes:data.durations.focus,finishedAt:new Date().toISOString()});
       save(); playAlarm();
       const next = completedToday()%4===0 ? "long" : "short"; setMode(next);
-      setTimeout(()=>alert("🌀 Focus session complete! Great work. Time for a little break."),900);
-    } else {playAlarm();alert("🌱 Break complete. Ready to grow another focus session?");setMode("focus");}
+    } else {playAlarm();setMode("focus");}
   }
   function playAlarm(){
     if(!data.alarm)return;
@@ -72,7 +73,7 @@
       ["🚶","Take a 10-minute walk","Let your mind reset"]
     ];
     const target=$("#breakRituals");
-    target.innerHTML=rituals.map(([emoji,title,description])=>`<p class="ritual"><span class="emoji">${emoji}</span><span><strong>${title}</strong><small>${description}</small></span></p>`).join("")+data.customRituals.map((ritual,index)=>`<div class="ritual"><span class="emoji">🌱</span><span><strong>${escapeHtml(ritual)}</strong><small>Your break ritual</small></span><button class="ritual-delete" type="button" data-delete-ritual="${index}" aria-label="Remove ${escapeHtml(ritual)}">×</button></div>`).join("");
+    target.innerHTML=rituals.map(([emoji,title,description])=>`<p class="ritual"><span class="emoji">${emoji}</span><span><strong>${title}</strong><small>${description}</small></span></p>`).join("")+data.customRituals.map((ritual,index)=>`<div class="ritual"><span class="emoji">🧊</span><span><strong>${escapeHtml(ritual)}</strong><small>Your break ritual</small></span><button class="ritual-delete" type="button" data-delete-ritual="${index}" aria-label="Remove ${escapeHtml(ritual)}">×</button></div>`).join("");
     $$('[data-delete-ritual]').forEach(button=>button.addEventListener("click",()=>{data.customRituals.splice(Number(button.dataset.deleteRitual),1);save();renderRituals();}));
   }
   function renderStats(){
@@ -89,7 +90,7 @@
   function showView(view){
     $$(".nav button").forEach(b=>b.classList.toggle("active",b.dataset.view===view));
     $("#focusView").classList.toggle("hidden",view!=="focus");$("#otherView").classList.toggle("hidden",view==="focus");
-    const titles={focus:"Make room for focus. 🌱",tasks:"Tend to your task list.",history:"Every session counts.",calendar:"Make time for focus.",settings:"Make it your own."};
+    const titles={focus:"Make room for focus.",tasks:"Tend to your task list.",history:"Every session counts.",calendar:"Make time for focus.",settings:"Make it your own."};
     $("#pageTitle").textContent=titles[view]||titles.focus;
     if(view==="focus")return;
     $("#otherTitle").textContent=titles[view];
@@ -119,6 +120,11 @@
     download("pomodoro-focus.ics",ics,"text/calendar");
   }
   $("#startPause").addEventListener("click",startTimer);
+  $("#phoneReminderConfirm").addEventListener("click",()=>{
+    sessionStorage.setItem("phoneReminderShown","1");
+    $("#phoneReminder").hidden=true;
+    startTimer();
+  });
   $("#resetBtn").addEventListener("click",()=>{pauseTimer();remaining=data.durations[data.mode]*60;renderTimer();});
   $("#skipBtn").addEventListener("click",()=>{pauseTimer();setMode(data.mode==="focus"?(completedToday()%4===3?"long":"short"):"focus");});
   $$(".mode-tabs button").forEach(b=>b.addEventListener("click",()=>setMode(b.dataset.mode)));
