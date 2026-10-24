@@ -16,7 +16,7 @@ A no-build, single-file starter app for the Pomodoro Garden concept.
 - Daily/weekly progress summary
 - Alarm sound generated with the Web Audio API (no audio API key)
 - Optional phone-away prompt
-- `.ics` calendar event download (manual import, not account sync)
+- Interactive monthly calendar with browser-local notes
 - Browser-local persistence using `localStorage`
 - Responsive layout for desktop and mobile
 
@@ -25,7 +25,7 @@ A no-build, single-file starter app for the Pomodoro Garden concept.
 - Browsers can throttle timers when a tab is backgrounded and may restrict audio until the user interacts with the page. This starter recalculates remaining time from a timestamp to reduce timer drift, but it cannot guarantee an alarm if the browser/device is suspended or the tab is closed.
 - The app uses browser alerts for end-of-session notifications. For a polished release, replace these with in-app toast/dialog UI.
 - The weekly chart is a lightweight visual summary, not a full analytics system.
-- Calendar support only downloads an `.ics` file. Two-way sync requires OAuth and a provider API.
+- Calendar notes are stored in this browser only; they are not synced to an external calendar.
 
 ## Do you need APIs?
 Not for the first version. Timer, tasks, alarms, and local statistics work in the browser.

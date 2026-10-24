@@ -112,7 +112,7 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
             <div class="mode-tabs" role="group" aria-label="Timer mode">
               <button class="active" data-mode="focus"> Focus</button><button data-mode="short">Short Break</button><button data-mode="long">Long break</button>
             </div>
-            <div class="timer-visuals" id="timerVisuals"><div class="ice-art-stack"><img id="iceArt" class="ice-art" src="./ice-cube.png" alt="Ice cube melting as time passes"><img id="meltedIceArt" class="ice-art melted-ice-art" src="./melted-ice.png" alt="" aria-hidden="true"></div><div class="timer-ring" id="timerRing"><div class="timer-inner"><div class="leaf">🌱</div><div class="time" id="timeDisplay" role="timer" aria-live="off" title="Click to edit the timer">25:00</div><div class="timer-label" id="timerLabel">FOCUS SESSION</div><div class="session-count" id="sessionCount">SESSION 1 OF 4</div></div></div></div>
+            <div class="timer-visuals" id="timerVisuals"><div class="ice-art-stack"><img id="iceArt" class="ice-art" src="./ice-cube.png" alt="Ice cube melting as time passes"><img id="meltedIceArt" class="ice-art melted-ice-art" src="./melted-ice.png" alt="" aria-hidden="true"></div><div class="timer-ring" id="timerRing"><div class="timer-inner"><div class="leaf">🩵</div><div class="time" id="timeDisplay" role="timer" aria-live="off" title="Click to edit the timer">25:00</div><div class="timer-label" id="timerLabel">FOCUS SESSION</div><div class="session-count" id="sessionCount">SESSION 1 OF 4</div></div></div></div>
             <div class="controls"><button class="primary" id="startPause">▶ &nbsp; Start focus</button><button class="secondary" id="resetBtn">↻ Reset</button><button class="secondary" id="skipBtn">⏭ Skip</button></div>
             <div class="phone-reminder" id="phoneReminder" role="region" aria-labelledby="phoneReminderTitle" aria-describedby="phoneReminderDescription" hidden>
               <strong id="phoneReminderTitle">Ready to focus?</strong>
@@ -146,12 +146,11 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
             </form>
             <!-- <div class="toggle-row"><label for="alarmToggle"> &nbsp; Loud alarm</label><input class="switch" type="checkbox" id="alarmToggle" checked></div> -->
             <div class="toggle-row"><label for="phoneToggle"> &nbsp; Phone-away reminder</label><input class="switch" type="checkbox" id="phoneToggle" checked></div>
-            <!-- <button class="secondary" id="calendarBtn" style="width:100%;margin-top:12px">▦ &nbsp; Download calendar event (.ics)</button> -->
           </section>
         </div>
       </div>
     </section>
-    <div class="focus-overlay" id="focusOverlay" role="dialog" aria-modal="true"><div class="overlay-top"><strong>MELT · focus mode</strong><button class="secondary" id="closeOverlay">✕ Exit focus view</button></div><div class="overlay-content"><div id="overlayTimer"></div><section class="card"><h2>☑ Your to-do list</h2><div id="overlayTasks"></div><p class="small-muted">One thing at a time. Everything else can wait.</p></section></div></div><section id="otherView" class="card hidden"><h2 class="view-title" id="otherTitle"></h2><div id="otherContent"></div></section>
+    <div class="focus-overlay" id="focusOverlay" role="dialog" aria-modal="true"><div class="overlay-top"><strong>MELT · focus mode</strong><button class="secondary" id="closeOverlay">✕ Exit focus view</button></div><div class="overlay-content"><div id="overlayTimer"></div><section class="card"><h2>☑ Your to-do list</h2><div id="overlayTasks"></div><p class="small-muted">One thing at a time. Everything else can wait.</p></section></div></div><section id="otherView" class="card hidden"><div id="otherContent"></div></section>
   </main>
 </div>
 
@@ -296,7 +295,6 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
     const titles={focus:"Make room for focus. 🌱",tasks:"Tend to your task list.",history:"Every session counts.",calendar:"Make time for focus.",settings:"Make it your own."};
     $("#pageTitle").textContent=titles[view]||titles.focus;
     if(view==="focus")return;
-    $("#otherTitle").textContent=titles[view];
     const content=$("#otherContent");
     if(view==="tasks"){
       content.innerHTML='<p class="small-muted">Your tasks are stored in this browser.</p><div id="allTasks"></div>';

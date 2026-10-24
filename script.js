@@ -5,9 +5,11 @@
   const defaults = {tasks:[],sessions:[],customRituals:[],mode:"focus",durations:{focus:25,short:5,long:15},alarm:true,phoneReminder:true};
   let data;
   try { data = {...defaults,...JSON.parse(localStorage.getItem(STORE) || "{}")}; } catch { data = {...defaults}; }
-  data.tasks ||= []; data.sessions ||= []; data.customRituals ||= []; data.durations = {...defaults.durations,...data.durations};
+  data.tasks ||= []; data.sessions ||= []; data.customRituals ||= []; data.calendarEvents ||= []; data.durations = {...defaults.durations,...data.durations};
   let remaining = data.durations[data.mode] * 60, running = false, endAt = null, ticker = null, audioCtx = null, focusMelted = false;
   let lastTickSecond = null;
+  let calendarMonth = new Date(new Date().getFullYear(),new Date().getMonth(),1);
+  let selectedCalendarDate = dateKey(new Date());
   const modes = {focus:{label:"FOCUS SESSION",button:"▶  Start focus"},short:{label:"SHORT BREAK",button:"▶  Start break"},long:{label:"LONG BREAK",button:"▶  Start long break"}};
   const todayKey = () => new Date().toLocaleDateString("en-CA");
   const save = () => { localStorage.setItem(STORE,JSON.stringify(data)); renderStats(); };
@@ -67,13 +69,16 @@
   function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
   function renderRituals(){
     const rituals=[
-      ["💧","Drink water","Rehydrate and refresh"],
-      ["🌳","Step outside","Get some fresh air"],
-      ["🧘","Stretch for 2 min","Move your body"],
-      ["🚶","Take a 10-minute walk","Let your mind reset"]
+      {image:"https://png.pngtree.com/png-vector/20220727/ourmid/pngtree-vector-icon-of-water-droplet-outline-against-a-white-backdrop-vector-png-image_47747826.jpg", emoji:"💧", title:"Drink water", description:"Rehydrate and refresh"},
+      {image:"https://yt3.googleusercontent.com/ytc/AIdro_n2T_SjX1pFvU0RzVgr1-cFVbAE2N4QX-cwt3PzrnOSqA=s900-c-k-c0x00ffffff-no-rj", emoji:"🌳", title:"Step outside", description:"Get some fresh air"},
+      {image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjh5uOSqFx_NEzkvYFGVBldGSDs-Cz9hf9bt4FeZ1V4dViv7O4Sr3FK-mV&s=10", emoji:"🧘", title:"Stretch for 2 min", description:"Move your body"},
+      {image:"https://media.discordapp.net/attachments/895104058795388948/1563358094841356469/Screenshot_2026-10-23_210641.png?ex=6add562f&is=6adc04af&hm=ee29489f91b224f0c8ed4196ab65b633ea68a719e5d2ad36f2fa1ebbe0fb6d65&=&format=webp&quality=lossless", emoji:"🚶", title:"Take a 10-minute walk", description:"Let your mind reset"}
     ];
     const target=$("#breakRituals");
-    target.innerHTML=rituals.map(([emoji,title,description])=>`<p class="ritual"><span class="emoji">${emoji}</span><span><strong>${title}</strong><small>${description}</small></span></p>`).join("")+data.customRituals.map((ritual,index)=>`<div class="ritual"><span class="emoji">🧊</span><span><strong>${escapeHtml(ritual)}</strong><small>Your break ritual</small></span><button class="ritual-delete" type="button" data-delete-ritual="${index}" aria-label="Remove ${escapeHtml(ritual)}">×</button></div>`).join("");
+    target.innerHTML=rituals.map(({image,emoji,title,description})=>{
+      const imageMarkup = image ? `<img class="ritual-image" src="${image}" alt="${escapeHtml(title)}">` : `<span class="emoji">${emoji}</span>`;
+      return `<p class="ritual">${imageMarkup}<span><strong>${title}</strong><small>${description}</small></span></p>`;
+    }).join("")+data.customRituals.map((ritual,index)=>`<div class="ritual"><span class="emoji">🧊</span><span><strong>${escapeHtml(ritual)}</strong><small>Your break ritual</small></span><button class="ritual-delete" type="button" data-delete-ritual="${index}" aria-label="Remove ${escapeHtml(ritual)}">×</button></div>`).join("");
     $$('[data-delete-ritual]').forEach(button=>button.addEventListener("click",()=>{data.customRituals.splice(Number(button.dataset.deleteRitual),1);save();renderRituals();}));
   }
   function renderStats(){
@@ -93,7 +98,6 @@
     const titles={focus:"Make room for focus.",tasks:"Tend to your task list.",history:"Every session counts.",calendar:"Make time for focus.",settings:"Make it your own."};
     $("#pageTitle").textContent=titles[view]||titles.focus;
     if(view==="focus")return;
-    $("#otherTitle").textContent=titles[view];
     const content=$("#otherContent");
     if(view==="tasks"){
       content.innerHTML='<p class="small-muted">Your tasks are stored in this browser.</p><div id="allTasks"></div>';
@@ -104,20 +108,65 @@
       content.innerHTML=`<p>You have completed <strong>${data.sessions.length}</strong> focus sessions, totalling <strong>${totalFocusMinutes()} minutes</strong>.</p>`+(data.sessions.length?'<div>'+data.sessions.slice().reverse().map(s=>`<div class="task-row">🧊 <span class="task-text">Focus session</span><span class="small-muted">${escapeHtml(s.day)} · ${s.minutes} min</span></div>`).join("")+'</div>':'<p class="empty">Your completed sessions will appear here.</p>')+'<button id="exportBtn" class="secondary">Export session history (CSV)</button>';
       $("#exportBtn").addEventListener("click",()=>{const rows=[["day","mode","minutes","finishedAt"],...data.sessions.map(s=>[s.day,s.mode,s.minutes,s.finishedAt])];download("pomodoro-history.csv",rows.map(r=>r.map(v=>`"${String(v??"").replaceAll('"','""')}"`).join(",")).join("\n"),"text/csv");});
     } else if(view==="calendar"){
-      content.innerHTML='<p>There is no calendar account connected in this starter version. You can download a local calendar event and import it into Google Calendar, Apple Calendar, or Outlook.</p><button id="icsBtn" class="primary">Download a focus block (.ics)</button><p class="small-muted">A true two-way sync requires a calendar provider API and sign-in flow.</p>';
-      $("#icsBtn").addEventListener("click",downloadCalendar);
+      content.innerHTML='<section class="card calendar-card"><div class="calendar-toolbar"><button id="calendarPrev" class="secondary" type="button" aria-label="Previous month">‹</button><h2 id="calendarMonthLabel" class="calendar-month-label"></h2><button id="calendarNext" class="secondary" type="button" aria-label="Next month">›</button></div><div class="calendar-weekdays" aria-hidden="true"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div><div id="calendarGrid" class="calendar-grid" role="group" aria-label="Choose a date"></div></section><section class="card calendar-day-card"><h2 id="selectedDateLabel"></h2><div id="calendarDayEvents"></div><form id="calendarEventForm" class="task-form"><input id="calendarEventInput" maxlength="120" placeholder="Add a note or plan for this day" aria-label="Calendar note" required><button type="submit">Add</button></form></section>';
+      renderCalendar();
+      $("#calendarPrev").addEventListener("click",()=>{calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()-1,1);renderCalendar();});
+      $("#calendarNext").addEventListener("click",()=>{calendarMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+1,1);renderCalendar();});
+      $("#calendarEventForm").addEventListener("submit",e=>{
+        e.preventDefault();
+        const input=$("#calendarEventInput"),title=input.value.trim();
+        if(!title)return;
+        data.calendarEvents.push({date:selectedCalendarDate,title});
+        save();
+        input.value="";
+        renderCalendar();
+      });
     } else if(view==="settings"){
       content.innerHTML=`<p>Choose your session lengths. Changes apply to the next timer session.</p><div class="task-row"><label class="task-text" for="focusMins">Focus minutes</label><input id="focusMins" type="number" min="1" max="120" value="${data.durations.focus}" style="width:90px;padding:8px;border:1px solid var(--line);border-radius:9px"></div><div class="task-row"><label class="task-text" for="shortMins">Short break minutes</label><input id="shortMins" type="number" min="1" max="60" value="${data.durations.short}" style="width:90px;padding:8px;border:1px solid var(--line);border-radius:9px"></div><div class="task-row"><label class="task-text" for="longMins">Long break minutes</label><input id="longMins" type="number" min="1" max="90" value="${data.durations.long}" style="width:90px;padding:8px;border:1px solid var(--line);border-radius:9px"></div><button id="saveSettings" class="primary">Save timer settings</button><hr style="border:0;border-top:1px solid var(--line);margin:22px 0"><button id="clearData" class="secondary">Clear all local data</button><p class="small-muted">This removes tasks and history saved in this browser only.</p>`;
       $("#saveSettings").addEventListener("click",()=>{for(const [id,key,max] of [["focusMins","focus",120],["shortMins","short",60],["longMins","long",90]]){const n=Number($("#"+id).value);if(!Number.isInteger(n)||n<1||n>max){alert(`Enter a whole number from 1 to ${max}.`);return;}data.durations[key]=n;}setMode(data.mode);alert("Settings saved.");});
-      $("#clearData").addEventListener("click",()=>{if(confirm("Delete all tasks and session history from this browser?")){data={...defaults,tasks:[],sessions:[],durations:{...defaults.durations}};localStorage.removeItem(STORE);pauseTimer();setMode("focus");renderStats();showView("settings");}});
+      $("#clearData").addEventListener("click",()=>{if(confirm("Delete all tasks, calendar notes, and session history from this browser?")){data={...defaults,tasks:[],sessions:[],calendarEvents:[],durations:{...defaults.durations}};localStorage.removeItem(STORE);pauseTimer();setMode("focus");renderStats();showView("settings");}});
     }
   }
   function download(name,content,type){const blob=new Blob([content],{type});const url=URL.createObjectURL(blob);const a=document.createElement("a");a.href=url;a.download=name;a.click();URL.revokeObjectURL(url);}
-  function downloadCalendar(){
-    const start=new Date(Date.now()+60000),end=new Date(start.getTime()+data.durations.focus*60000);
-    const fmt=d=>d.toISOString().replace(/[-:]/g,"").replace(/\.\d{3}/,"");
-    const ics=`BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//Pomodoro Garden//EN\nBEGIN:VEVENT\nUID:${Date.now()}@pomodoro-garden.local\nDTSTAMP:${fmt(new Date())}\nDTSTART:${fmt(start)}\nDTEND:${fmt(end)}\nSUMMARY:Pomodoro Garden focus session\nDESCRIPTION:One focused session. Remember to take a break afterwards.\nEND:VEVENT\nEND:VCALENDAR`;
-    download("pomodoro-focus.ics",ics,"text/calendar");
+  function dateKey(date){
+    return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;
+  }
+  function renderCalendar(){
+    const monthLabel=$("#calendarMonthLabel");
+    if(!monthLabel)return;
+    monthLabel.textContent=calendarMonth.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+    const first=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth(),1);
+    const offset=(first.getDay()+6)%7;
+    const daysInMonth=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+1,0).getDate();
+    const cellCount=Math.ceil((offset+daysInMonth)/7)*7;
+    const today=dateKey(new Date());
+    const cells=Array.from({length:cellCount},(_,index)=>{
+      const date=new Date(calendarMonth.getFullYear(),calendarMonth.getMonth(),index-offset+1);
+      const key=dateKey(date),events=data.calendarEvents.filter(event=>event.date===key);
+      const classes=["calendar-day"];
+      if(date.getMonth()!==calendarMonth.getMonth())classes.push("outside-month");
+      if(key===selectedCalendarDate)classes.push("selected");
+      if(key===today)classes.push("today");
+      const eventTitles=events.map(event=>event.title);
+      const accessibleLabel=[date.toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric",year:"numeric"}),...eventTitles].join(": ");
+      const eventMarkup=events.map(event=>`<small class="calendar-entry" title="${escapeHtml(event.title)}">${escapeHtml(event.title)}</small>`).join("");
+      return `<button class="${classes.join(" ")}" type="button" data-calendar-date="${key}" aria-label="${escapeHtml(accessibleLabel)}" aria-pressed="${key===selectedCalendarDate}"><span>${date.getDate()}</span>${eventMarkup?`<span class="calendar-entries">${eventMarkup}</span>`:""}</button>`;
+    });
+    $("#calendarGrid").innerHTML=cells.join("");
+    $$("[data-calendar-date]").forEach(button=>button.addEventListener("click",()=>{
+      selectedCalendarDate=button.dataset.calendarDate;
+      const picked=new Date(`${selectedCalendarDate}T12:00:00`);
+      calendarMonth=new Date(picked.getFullYear(),picked.getMonth(),1);
+      renderCalendar();
+    }));
+    $("#selectedDateLabel").textContent=new Date(`${selectedCalendarDate}T12:00:00`).toLocaleDateString(undefined,{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+    const selectedEvents=data.calendarEvents.map((event,index)=>({...event,index})).filter(event=>event.date===selectedCalendarDate);
+    $("#calendarDayEvents").innerHTML=selectedEvents.length?selectedEvents.map(event=>`<div class="calendar-event"><span>${escapeHtml(event.title)}</span><button class="secondary" type="button" data-delete-calendar-event="${event.index}" aria-label="Delete ${escapeHtml(event.title)}">Delete</button></div>`).join(""):'<p class="empty">Nothing planned for this day yet.</p>';
+    $$("[data-delete-calendar-event]").forEach(button=>button.addEventListener("click",()=>{
+      data.calendarEvents.splice(Number(button.dataset.deleteCalendarEvent),1);
+      save();
+      renderCalendar();
+    }));
   }
   $("#startPause").addEventListener("click",startTimer);
   $("#phoneReminderConfirm").addEventListener("click",()=>{
@@ -133,9 +182,49 @@
   const alarmToggle=$("#alarmToggle");if(alarmToggle){alarmToggle.checked=data.alarm;alarmToggle.addEventListener("change",e=>{data.alarm=e.target.checked;save();});}
   $("#phoneToggle").checked=data.phoneReminder;$("#phoneToggle").addEventListener("change",e=>{data.phoneReminder=e.target.checked;save();});
   $("#ritualForm").addEventListener("submit",e=>{e.preventDefault();const ritual=$("#ritualInput").value.trim();if(!ritual)return;data.customRituals.push(ritual);$("#ritualInput").value="";save();renderRituals();});
-  const calendarBtn=$("#calendarBtn");if(calendarBtn)calendarBtn.addEventListener("click",downloadCalendar);
   $("#todayLabel").textContent=new Date().toLocaleDateString(undefined,{weekday:"short",month:"short",day:"numeric",year:"numeric"}).toUpperCase();
-  $("#timeDisplay").addEventListener("click",()=>{if(running)return;const d=$("#timeDisplay"),i=document.createElement("input");i.value=d.textContent;i.style.cssText="font:inherit;font-size:clamp(40px,5vw,60px);width:190px;text-align:center";d.replaceWith(i);i.focus();i.select();const done=()=>{let v=i.value.trim(),n;if(/^\d{1,3}:\d{1,2}$/.test(v)){const a=v.split(":").map(Number);n=a[0]*60+a[1]}else n=/^\d{1,3}$/.test(v)?Number(v)*60:remaining;n=Math.max(1,Math.min(7200,n));data.durations[data.mode]=Math.ceil(n/60);remaining=n;save();i.replaceWith(d);renderTimer()};i.addEventListener("keydown",e=>{if(e.key==="Enter")done();if(e.key==="Escape"){i.replaceWith(d);renderTimer()}});i.addEventListener("blur",done,{once:true})});
+  $("#timeDisplay").addEventListener("click",()=>{
+    if(running)return;
+    const display=$("#timeDisplay"),input=document.createElement("input");
+    input.value=display.textContent;
+    input.inputMode="numeric";
+    input.maxLength=6;
+    input.setAttribute("aria-label","Timer duration in seconds or minutes and seconds");
+    input.style.cssText="font:inherit;font-size:clamp(40px,5vw,60px);width:190px;text-align:center";
+    display.replaceWith(input);
+    input.focus();
+    input.select();
+    let finished=false;
+    const finish=apply=>{
+      if(finished)return;
+      finished=true;
+      if(apply){
+        const value=input.value.trim();
+        let seconds=null;
+        if(/^\d{1,3}:\d{1,2}$/.test(value)){
+          const [minutes,secs]=value.split(":").map(Number);
+          if(secs<60)seconds=minutes*60+secs;
+        }else if(/^\d{1,4}$/.test(value)){
+          if(value.length<=2)seconds=Number(value);
+          else if(value.length===3)seconds=Number(value[0])*60+Number(value.slice(1));
+          else seconds=Number(value.slice(0,2))*60+Number(value.slice(2));
+        }
+        if(seconds!==null){
+          seconds=Math.max(1,Math.min(7200,seconds));
+          data.durations[data.mode]=Math.ceil(seconds/60);
+          remaining=seconds;
+          save();
+        }
+      }
+      input.replaceWith(display);
+      renderTimer();
+    };
+    input.addEventListener("keydown",event=>{
+      if(event.key==="Enter")finish(true);
+      if(event.key==="Escape")finish(false);
+    });
+    input.addEventListener("blur",()=>finish(true),{once:true});
+  });
   const overlay=$("#focusOverlay");$("#closeOverlay").addEventListener("click",()=>overlay.classList.remove("open"));const startOriginal=startTimer;startTimer=function(){startOriginal();if(running){$("#overlayTimer").append(document.querySelector(".timer-card"));$("#overlayTasks").innerHTML=$("#nextTask").innerHTML;overlay.classList.add("open")}};
   const renderOriginal=renderTimer;renderTimer=function(){renderOriginal();if(overlay.classList.contains("open")){const card=document.querySelector(".timer-card");if(card&&!overlay.contains(card))$("#overlayTimer").append(card);$("#overlayTasks").innerHTML=$("#nextTask").innerHTML}const pct=data.mode==="focus"?Math.max(0,Math.min(1,1-remaining/(data.durations.focus*60||1))):0;$("#iceArt").style.clipPath=`inset(${(focusMelted?100:pct*100)}% 0 0 0)`;$("#meltedIceArt").classList.toggle("visible",focusMelted)};
   renderTimer();renderStats();renderRituals();
