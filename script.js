@@ -23,6 +23,7 @@
     $("#startPause").textContent = running ? "Ⅱ  Pause" : modes[data.mode].button;
     $("#sessionCount").textContent = `SESSION ${(completedToday()%4)+1} OF 4`;
     $$(".mode-tabs button").forEach(b=>b.classList.toggle("active",b.dataset.mode===data.mode));
+    $("#focusOverlay").classList.toggle("break-mode",data.mode!=="focus");
     const total = data.durations[data.mode]*60;
     const pct = total ? (1-remaining/total)*100 : 0;
     $("#timerRing").style.setProperty("--progress", `${pct}%`);
@@ -74,11 +75,12 @@
       {image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjh5uOSqFx_NEzkvYFGVBldGSDs-Cz9hf9bt4FeZ1V4dViv7O4Sr3FK-mV&s=10", emoji:"🧘", title:"Stretch for 2 min", description:"Move your body"},
       {image:"https://media.discordapp.net/attachments/895104058795388948/1563358094841356469/Screenshot_2026-10-23_210641.png?ex=6add562f&is=6adc04af&hm=ee29489f91b224f0c8ed4196ab65b633ea68a719e5d2ad36f2fa1ebbe0fb6d65&=&format=webp&quality=lossless", emoji:"🚶", title:"Take a 10-minute walk", description:"Let your mind reset"}
     ];
-    const target=$("#breakRituals");
-    target.innerHTML=rituals.map(({image,emoji,title,description})=>{
+    const ritualMarkup=rituals.map(({image,emoji,title,description})=>{
       const imageMarkup = image ? `<img class="ritual-image" src="${image}" alt="${escapeHtml(title)}">` : `<span class="emoji">${emoji}</span>`;
       return `<p class="ritual">${imageMarkup}<span><strong>${title}</strong><small>${description}</small></span></p>`;
     }).join("")+data.customRituals.map((ritual,index)=>`<div class="ritual"><span class="emoji">🧊</span><span><strong>${escapeHtml(ritual)}</strong><small>Your break ritual</small></span><button class="ritual-delete" type="button" data-delete-ritual="${index}" aria-label="Remove ${escapeHtml(ritual)}">×</button></div>`).join("");
+    $("#breakRituals").innerHTML=ritualMarkup;
+    $("#overlayBreakRituals").innerHTML=ritualMarkup;
     $$('[data-delete-ritual]').forEach(button=>button.addEventListener("click",()=>{data.customRituals.splice(Number(button.dataset.deleteRitual),1);save();renderRituals();}));
   }
   function renderStats(){
@@ -225,7 +227,43 @@
     });
     input.addEventListener("blur",()=>finish(true),{once:true});
   });
-  const overlay=$("#focusOverlay");$("#closeOverlay").addEventListener("click",()=>overlay.classList.remove("open"));const startOriginal=startTimer;startTimer=function(){startOriginal();if(running){$("#overlayTimer").append(document.querySelector(".timer-card"));$("#overlayTasks").innerHTML=$("#nextTask").innerHTML;overlay.classList.add("open")}};
-  const renderOriginal=renderTimer;renderTimer=function(){renderOriginal();if(overlay.classList.contains("open")){const card=document.querySelector(".timer-card");if(card&&!overlay.contains(card))$("#overlayTimer").append(card);$("#overlayTasks").innerHTML=$("#nextTask").innerHTML}const pct=data.mode==="focus"?Math.max(0,Math.min(1,1-remaining/(data.durations.focus*60||1))):0;$("#iceArt").style.clipPath=`inset(${(focusMelted?100:pct*100)}% 0 0 0)`;$("#meltedIceArt").classList.toggle("visible",focusMelted)};
+  const overlay=$("#focusOverlay"),timerCard=document.querySelector(".timer-card");
+  const timerHome=timerCard.parentNode,timerHomeNext=timerCard.nextSibling;
+  function syncOverlaySideHeight(){
+    if(overlay.classList.contains("open")){
+      $("#overlaySide").style.height=`${timerCard.getBoundingClientRect().height}px`;
+    }
+  }
+  new ResizeObserver(syncOverlaySideHeight).observe(timerCard);
+  function restoreTimerCard(){
+    timerHome.insertBefore(timerCard,timerHomeNext);
+    $("#overlaySide").style.height="";
+  }
+  $("#closeOverlay").addEventListener("click",()=>{
+    restoreTimerCard();
+    overlay.classList.remove("open");
+  });
+  const startOriginal=startTimer;
+  startTimer=function(){
+    startOriginal();
+    if(running){
+      $("#overlayTimer").append(timerCard);
+      $("#overlayTasks").innerHTML=$("#nextTask").innerHTML;
+      overlay.classList.add("open");
+      syncOverlaySideHeight();
+    }
+  };
+  const renderOriginal=renderTimer;
+  renderTimer=function(){
+    renderOriginal();
+    if(overlay.classList.contains("open")){
+      if(!overlay.contains(timerCard))$("#overlayTimer").append(timerCard);
+      $("#overlayTasks").innerHTML=$("#nextTask").innerHTML;
+      syncOverlaySideHeight();
+    }
+    const pct=data.mode==="focus"?Math.max(0,Math.min(1,1-remaining/(data.durations.focus*60||1))):0;
+    $("#iceArt").style.clipPath=`inset(${(focusMelted?100:pct*100)}% 0 0 0)`;
+    $("#meltedIceArt").classList.toggle("visible",focusMelted);
+  };
   renderTimer();renderStats();renderRituals();
 })();

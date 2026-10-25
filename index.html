@@ -136,21 +136,22 @@ h2{font:700 23px/1.2 Georgia,serif;margin:0 0 15px;letter-spacing:-.3px}
             <h2 class="section-title">Today’s Melts</h2>
             <div class="progress-top"><strong id="todayCount">0 / 8</strong><span>sessions completed</span></div><div class="tomatoes" id="tomatoes"></div>
             <div class="week" id="weekBars"></div>
-          </section>
-          <section class="card">
-            <h2 class="section-title"><span>Break Ritual</h2><p class="small-muted" style="margin-top:-9px">A little pause goes a long way.</p>
-            <div id="breakRituals"></div>
-            <form class="ritual-form" id="ritualForm">
-              <input id="ritualInput" maxlength="80" placeholder="Add your own ritual" aria-label="New break ritual" required>
-              <button type="submit" aria-label="Add Your Own">Add</button>
-            </form>
-            <!-- <div class="toggle-row"><label for="alarmToggle"> &nbsp; Loud alarm</label><input class="switch" type="checkbox" id="alarmToggle" checked></div> -->
             <div class="toggle-row"><label for="phoneToggle"> &nbsp; Phone-away reminder</label><input class="switch" type="checkbox" id="phoneToggle" checked></div>
+          </section>
+          <section class="card normal-break-card" aria-label="Break rituals">
+            <div class="normal-break-content">
+              <h2 class="section-title"><span>Break Ritual</span></h2><p class="small-muted" style="margin-top:-9px">A little pause goes a long way.</p>
+              <div id="breakRituals"></div>
+              <form class="ritual-form" id="ritualForm">
+                <input id="ritualInput" maxlength="80" placeholder="Add your own ritual" aria-label="New break ritual" required>
+                <button type="submit" aria-label="Add Your Own">Add</button>
+              </form>
+            </div>
           </section>
         </div>
       </div>
     </section>
-    <div class="focus-overlay" id="focusOverlay" role="dialog" aria-modal="true"><div class="overlay-top"><strong>MELT · focus mode</strong><button class="secondary" id="closeOverlay">✕ Exit focus view</button></div><div class="overlay-content"><div id="overlayTimer"></div><section class="card"><h2>☑ Your to-do list</h2><div id="overlayTasks"></div><p class="small-muted">One thing at a time. Everything else can wait.</p></section></div></div><section id="otherView" class="card hidden"><div id="otherContent"></div></section>
+    <div class="focus-overlay" id="focusOverlay" role="dialog" aria-modal="true"><div class="overlay-top"><strong>MELT · focus mode</strong><button class="secondary" id="closeOverlay">✕ Exit focus view</button></div><div class="overlay-content"><div id="overlayTimer"></div><div class="overlay-side" id="overlaySide"><section class="card overlay-task-card"><h2>☑ Your to-do list</h2><div class="overlay-task-list"><div id="overlayTasks"></div></div><p class="small-muted">One thing at a time. Everything else can wait.</p></section><section class="card overlay-break-card" aria-label="Break rituals"><div class="overlay-break-content"><h2 class="section-title"><span>Break Ritual</span></h2><p class="small-muted" style="margin-top:-9px">A little pause goes a long way.</p><div class="overlay-break-list"><div id="overlayBreakRituals"></div></div></div></section></div></div></div><section id="otherView" class="card hidden"><div id="otherContent"></div></section>
   </main>
 </div>
 
